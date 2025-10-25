@@ -1,6 +1,3 @@
-"use client";
-
-import { Menu } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,42 +9,42 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-import { navLinks } from "@/constants";
 import ROUTES from "@/constants/routes";
+
+import NavLinks from "./NavLinks";
+import { MenuIcon } from "../ui/icons/lucide-menu";
 
 const MobileNavigation = () => {
   return (
     <Sheet>
-      <SheetTrigger asChild className="md:hidden">
-        <Button variant="ghost" size="icon" aria-label="القائمة">
-          <Menu className="h-5 w-5" />
+      <SheetTrigger asChild>
+        <Button
+          variant="ghost"
+          aria-label="القائمة"
+          className="lg:hidden h-12 w-12 p-0"
+          style={{ width: "28px", height: "28px" }}
+        >
+          <MenuIcon style={{ width: "100%", height: "100%" }} />
         </Button>
       </SheetTrigger>
-      <SheetContent className="bg-white">
+      <SheetContent>
         <SheetTitle className="hidden"></SheetTitle>
         <div className="mt-10 flex flex-col gap-6 text-right  ">
-          {/* Navigation Links */}
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-lg font-medium transition-colors hover:text-primary"
-            >
-              {link.label}
-            </Link>
-          ))}
+          <NavLinks isMobileNav />
 
-          {/* Auth Buttons */}
           <div className="mt-6 flex flex-col gap-3 border-t pt-6">
             <Link
               href={ROUTES.SIGN_IN}
-              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "w-full p-6"
+              )}
             >
               تسجيل الدخول
             </Link>
             <Link
               href={ROUTES.SIGN_UP}
-              className={cn(buttonVariants(), "w-full text-white")}
+              className={cn(buttonVariants(), "w-full text-white p-6")}
             >
               إنشاء حساب
             </Link>
