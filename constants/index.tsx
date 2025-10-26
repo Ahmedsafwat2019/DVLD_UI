@@ -9,3 +9,26 @@ export const navLinks = [
   { href: "/services", label: "خدماتنا", icon: <CarIcon /> },
   { href: "/contact", label: "تواصل معنا", icon: <SendHorizontalIcon /> },
 ];
+
+export const services = [
+  {
+    href: "/services/license",
+    label: "تجديد رخصة القيادة",
+  },
+  {
+    href: "/services/registration",
+    label: "تسجيل المركبات",
+  },
+  {
+    href: "/services/fines",
+    label: "الاستعلام عن المخالفات",
+  },
+  {
+    href: "/services/appointment",
+    label: "حجز موعد",
+  },
+  {
+    href: "/services/online",
+    label: "الخدمات الإلكترونية",
+  },
+];

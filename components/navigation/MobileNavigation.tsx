@@ -27,7 +27,7 @@ const MobileNavigation = () => {
           <MenuIcon style={{ width: "100%", height: "100%" }} />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="min-w-full">
         <SheetTitle className="hidden"></SheetTitle>
         <div className="mt-10 flex flex-col gap-6 text-right  ">
           <NavLinks isMobileNav />
