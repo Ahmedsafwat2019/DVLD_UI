@@ -1,5 +1,5 @@
 import { testResult } from "@/types/testResult";
-import { ApiClient } from "../API/GeneralApi";
+import { ApiClient } from "./GeneralApi";
 
 const apiClient = new ApiClient("http://localhost:5240/api/Tests");
 

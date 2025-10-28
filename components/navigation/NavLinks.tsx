@@ -15,9 +15,8 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
           (pathname.includes(link.href) && link.href.length > 1) ||
           pathname === link.href;
         return isMobileNav ? (
-          <SheetClose asChild>
+          <SheetClose asChild key={link.href}>
             <Link
-              key={link.href}
               href={link.href}
               className={cn(
                 isActive

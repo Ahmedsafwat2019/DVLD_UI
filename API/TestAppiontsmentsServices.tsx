@@ -1,5 +1,5 @@
 // services/testAppointmentService.ts
-import { ApiClient } from "../API/GeneralApi";
+import { ApiClient } from "./GeneralApi";
 import { testAppointsment } from "@/types/testAppointment";
 import { TestAppointmentsView } from "@/types/testAppointmentView";
 

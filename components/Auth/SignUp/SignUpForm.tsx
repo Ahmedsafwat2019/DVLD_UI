@@ -3,11 +3,11 @@ import Link from "next/link";
 import SignUpSchema from "@/utilts/ValidationsSchemas";
 import { useState, useEffect } from "react";
 import { guid, json, z, ZodError } from "zod";
-import { GetAll } from "../../../components/API/CountriesServices";
+import { GetAll } from "../../../API/CountriesServices";
 import { da } from "zod/v4/locales";
 import { country } from "@/types/country";
 import { city } from "@/types/city";
-import { GetByCountry } from "@/components/API/CitiesServices";
+import { GetByCountry } from "@/API/CitiesServices";
 const SignupForm = () => {
   const [formData, setFormData] = useState({
     firstName: " ",
@@ -81,7 +81,7 @@ const SignupForm = () => {
   }, [formData.nationality]);
 
   // sending
-  const validateField = (fieldName : any, value : any) => {
+  const validateField = (fieldName: any, value: any) => {
     try {
       if (fieldName === "confirmPassword") {
         if (value !== formData.password) {
@@ -162,7 +162,7 @@ const SignupForm = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
           credentials: "include",
-        },
+        }
       );
       let data: any = null;
       const contentType = response.headers.get("Content-Type");

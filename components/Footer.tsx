@@ -38,9 +38,8 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">روابط سريعة</h3>
             <ul className="space-y-3">
               {navLinks.map((link) => (
-                <li>
+                <li key={link.href}>
                   <Link
-                    key={link.href}
                     href={link.href}
                     className="text-text-300 hover:text-white-text transition-colors duration-200"
                   >
@@ -56,7 +55,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">خدماتنا</h3>
             <ul className="space-y-2">
               {services.map((service) => (
-                <li>
+                <li key={service.href}>
                   <Link
                     href={service.href}
                     className="text-text-300 hover:text-white-text transition-colors duration-200"
