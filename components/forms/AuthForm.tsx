@@ -94,7 +94,9 @@ const AuthForm = <T extends FieldValues>({
     <section
       className={cn(
         `light-border bg-light-800 border px-4 py-10 shadow-md max-w-4xl sm:px-8`,
-        isSignIn ? "sm:min-w-[520px]" : "min-w-full md:min-w-3xl lg:min-w-4xl"
+        isSignIn
+          ? "sm:min-w-[520px]"
+          : "min-w-full md:min-w-2xl lg:min-w-4xl xl:min-w-5xl"
       )}
     >
       <div
