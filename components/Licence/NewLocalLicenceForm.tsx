@@ -179,111 +179,83 @@ const NewLocalLicenceForm = () => {
       }
     }
   }
-  return (
-    <>
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap">
-          <div className="w-full px-4">
-            <div className="shadow-three dark:bg-dark dark:bg-gray-800 border-gray-100 dark:border-gray-700 mx-auto max-w-[600px] rounded-xl border bg-white px-6 py-8 sm:p-8">
-              <div className="mb-3 text-center">
-                <h3 className="text-gray-800 mb-1 text-xl font-bold dark:text-white">
-                  Select License Type
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Choose the type of license you want to apply for
-                </p>
-              </div>
-              <form>
-                <div className="InputField mb-4">
-                  <label
-                    htmlFor="licenseClass"
-                    className="text-gray-700 dark:text-gray-300 mb-2 block text-sm font-semibold"
-                  >
-                    License Class
-                  </label>
-                  <div className="relative">
-                    <select
-                      onBlur={(e) => {
-                        validateField("licenseClassId", e.target.value);
-                      }}
-                      onChange={(e) => {
-                        HadleLicenceClassChange(e);
-                      }}
-                      value={formData.licenseClassId}
-                      name="licenseClassId"
-                      className="border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-700 dark:text-gray-200 w-full cursor-pointer appearance-none rounded-lg border bg-white px-4 py-4 text-base transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-blue-400 dark:focus:ring-blue-800"
-                    >
-                      <option value="">-- Select License Class --</option>
-                      {licenseClasses.map((licenceClass: any) => (
-                        <option key={licenceClass.id} value={licenceClass.id}>
-                          {licenceClass.className}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg
-                        className="text-gray-400 h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  {hasMounted && errors.licenseClassId && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {errors.licenseClassId}
-                    </p>
-                  )}
-                  {showlicenceCard && licenceCardDetails && (
-                    <LicenceCard licenceClass={licenceCardDetails} />
-                  )}
-                </div>
-                <div className="mt-6">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleSubmitClick();
-                    }}
-                    type="submit"
-                    className="dark:shadow-gray-900/20 dark:hover:shadow-gray-900/30 flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-700 hover:to-purple-700 hover:shadow-xl dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600"
-                  >
-                    <svg
-                      className="mr-2 h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Submit Application
-                  </button>
-                </div>
-              </form>
-            </div>
+return(
+  <>
+  <div className="container">
+    <div className="-mx-4 flex flex-wrap">
+      <div className="w-full px-4">
+        <div className="shadow-three dark:bg-dark dark:bg-gray-800 border-gray-100 dark:border-gray-700 mx-auto max-w-[600px] rounded-xl border bg-white px-6 py-8 sm:p-8">
+          <div className="mb-3 text-center">
+            <h3 className="text-gray-800 mb-1 text-xl font-bold dark:text-white">
+              اختر نوع الرخصة
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              يرجى اختيار نوع الرخصة التي ترغب في التقديم عليها
+            </p>
           </div>
-        </div>
-      </div>
-
-      {/* Confirm Dialog */}
-      {showConfirmDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="dark:bg-gray-800 mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+          <form>
+            <div className="InputField mb-4">
+              <label
+                htmlFor="licenseClass"
+                className="text-gray-700 dark:text-gray-300 mb-2 block text-sm font-semibold"
+              >
+                فئة الرخصة
+              </label>
+              <div className="relative">
+                <select
+                  onBlur={(e) => {
+                    validateField("licenseClassId", e.target.value);
+                  }}
+                  onChange={(e) => {
+                    HadleLicenceClassChange(e);
+                  }}
+                  value={formData.licenseClassId}
+                  name="licenseClassId"
+                  className="border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-700 dark:text-gray-200 w-full cursor-pointer appearance-none rounded-lg border bg-white px-4 py-4 text-base transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-blue-400 dark:focus:ring-blue-800"
+                >
+                  <option value="">-- اختر فئة الرخصة --</option>
+                  {licenseClasses.map((licenceClass: any) => (
+                    <option key={licenceClass.id} value={licenceClass.id}>
+                      {licenceClass.className}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg
+                    className="text-gray-400 h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
+              {hasMounted && errors.licenseClassId && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.licenseClassId}
+                </p>
+              )}
+              {showlicenceCard && licenceCardDetails && (
+                <LicenceCard licenceClass={licenceCardDetails} />
+              )}
+            </div>
+            <div className="mt-6">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmitClick();
+                }}
+                type="submit"
+                className="dark:shadow-gray-900/20 dark:hover:shadow-gray-900/30 flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-700 hover:to-purple-700 hover:shadow-xl dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600"
+              >
                 <svg
-                  className="h-8 w-8 text-blue-600 dark:text-blue-400"
+                  className="mr-2 h-5 w-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -292,39 +264,67 @@ const NewLocalLicenceForm = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-              </div>
-              <h3 className="text-gray-900 mb-2 text-lg font-semibold dark:text-white">
-                Confirm Application
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Are you sure you want to submit your license application? This
-                action cannot be undone.
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowConfirmDialog(false)}
-                  className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 rounded-lg border px-4 py-2 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    setShowConfirmDialog(false);
-                    HandeleSubmitForm();
-                  }}
-                  className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
-                >
-                  Confirm
-                </button>
-              </div>
+                إرسال الطلب
+              </button>
             </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* مربع التأكيد */}
+  {showConfirmDialog && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="dark:bg-gray-800 mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+        <div className="text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+            <svg
+              className="h-8 w-8 text-blue-600 dark:text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-gray-900 mb-2 text-lg font-semibold dark:text-white">
+            تأكيد الطلب
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            هل أنت متأكد أنك تريد إرسال طلب الرخصة؟ لا يمكن التراجع عن هذا الإجراء.
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowConfirmDialog(false)}
+              className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 rounded-lg border px-4 py-2 transition-colors"
+            >
+              إلغاء
+            </button>
+            <button
+              onClick={() => {
+                setShowConfirmDialog(false);
+                HandeleSubmitForm();
+              }}
+              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+            >
+              تأكيد
+            </button>
           </div>
         </div>
-      )}
-    </>
-  );
+      </div>
+    </div>
+  )}
+</>
+
+)
 };
 export default NewLocalLicenceForm;
