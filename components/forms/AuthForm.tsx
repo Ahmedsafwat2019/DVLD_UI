@@ -68,6 +68,8 @@ const AuthForm = <T extends FieldValues>({
   const form = useForm<T>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
@@ -93,7 +95,7 @@ const AuthForm = <T extends FieldValues>({
   return (
     <section
       className={cn(
-        `light-border bg-light-800 border px-4 py-10 shadow-md max-w-4xl sm:px-8`,
+        `light-border bg-light-800 border px-4 py-10 shadow-md max-w-4xl sm:px-8 rounded-md`,
         isSignIn
           ? "sm:min-w-[520px]"
           : "min-w-full md:min-w-2xl lg:min-w-4xl xl:min-w-5xl"
@@ -140,10 +142,10 @@ const AuthForm = <T extends FieldValues>({
                             defaultValue={field.value}
                             dir="rtl"
                           >
-                            <SelectTrigger className="min-h-12 rounded-1.5 border px-3 py-2">
+                            <SelectTrigger className="min-h-12 rounded-1.5 px-3 py-2 border-blue-2 ">
                               <SelectValue placeholder={`اختر ${label}`} />
                             </SelectTrigger>
-                            <SelectContent className="w-[100px]">
+                            <SelectContent className="w-[100px] sm:w-[300px] ">
                               {selectOptions[name].map((option) => (
                                 <SelectItem
                                   key={option}
@@ -162,7 +164,7 @@ const AuthForm = <T extends FieldValues>({
                               id="date"
                               value={field.value || value}
                               placeholder="June 01, 2025"
-                              className="bg-background pr-10 p-6 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
+                              className="bg-background pr-10 p-6 w-full rounded-lg border-blue-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
                               onChange={(e) => {
                                 const inputDate = new Date(e.target.value);
                                 const formatted = formatDate(inputDate);
@@ -248,7 +250,13 @@ const AuthForm = <T extends FieldValues>({
                                   : "text"
                             }
                             {...field}
-                            className="no-focus min-h-12 rounded-lg border px-3 py-2"
+                            placeholder={`أدخل ${label}`}
+                            className={cn(
+                              "style-input border-blue-2 duration-200 transition-colors bg-white",
+                              form.formState.errors[name]
+                                ? "border-red-500  hover:border-red-500  no-focus "
+                                : "hover:border-blue-700 focus:border-blue-600"
+                            )}
                           />
                         )}
                       </FormControl>
