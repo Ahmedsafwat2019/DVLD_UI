@@ -1,9 +1,9 @@
 interface LicenceCardProps {
   licenceClass: {
-    className: string;
-    classDescription: string;
-    classFees: number;
-    minimumAllowedAge: number;
+    className?: string;
+    classDescription?: string;
+    classFees?: number;
+    minimumAllowedAge?: number;
   } | null;
 }
 const LicenceCard = ({ licenceClass }: LicenceCardProps) => {
@@ -32,7 +32,7 @@ const LicenceCard = ({ licenceClass }: LicenceCardProps) => {
           <h3 className="text-gray-800 mb-1 text-xl font-bold dark:text-white">
             {licenceClass.className}
           </h3>
-          <div className="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+          <div className="h-1 w-16 rounded-full bg-linear-to-r from-blue-500 to-purple-500"></div>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ const LicenceCard = ({ licenceClass }: LicenceCardProps) => {
       {/* Details Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Fees Card */}
-        <div className="rounded-lg border border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-4 dark:border-green-800 dark:from-green-900/20 dark:to-emerald-900/20">
+        <div className="rounded-lg border border-green-200 bg-linear-to-br from-green-50 to-emerald-50 p-4 dark:border-green-800 dark:from-green-900/20 dark:to-emerald-900/20">
           <div className="mb-2 flex items-center">
             <svg
               className="mr-2 h-5 w-5 text-green-600 dark:text-green-400"
@@ -71,7 +71,7 @@ const LicenceCard = ({ licenceClass }: LicenceCardProps) => {
         </div>
 
         {/* Age Requirement Card */}
-        <div className="rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-4 dark:border-blue-800 dark:from-blue-900/20 dark:to-indigo-900/20">
+        <div className="rounded-lg border border-blue-200 bg-linear-to-br from-blue-50 to-indigo-50 p-4 dark:border-blue-800 dark:from-blue-900/20 dark:to-indigo-900/20">
           <div className="mb-2 flex items-center">
             <svg
               className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400"

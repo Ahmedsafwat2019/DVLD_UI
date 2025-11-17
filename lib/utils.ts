@@ -16,6 +16,11 @@ export function formatDate(date: Date | undefined) {
     year: "numeric",
   });
 }
+export function formatToISODate(date: Date | string | null): string | null {
+  if (!date) return null;
+  const d = new Date(date);
+  return isNaN(d.getTime()) ? null : d.toISOString();
+}
 
 export function isValidDate(date: Date | undefined) {
   if (!date) {

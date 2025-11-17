@@ -3,12 +3,13 @@ import { promises } from "dns";
 import { ApiClient } from "./GeneralApi";
 import { LocalDrivingLicenseApplication } from "@/types/localDrivingLicenceViewType";
 import { testAppointsment } from "@/types/testAppointment";
+import { env } from "@/constants/env";
 
 const apiClient = new ApiClient(
-  "http://localhost:5240/api/LocalDrivingLicencesApps/ChangeStatus",
+  `${env.BASE_URL}/LocalDrivingLicencesApps/ChangeStatus`
 );
 
-export const ChangeStatus = async (id): Promise<any> => {
+export const ChangeStatus = async (id: string): Promise<any> => {
   return await apiClient.post<any>(`/${id}`);
 };
 /*

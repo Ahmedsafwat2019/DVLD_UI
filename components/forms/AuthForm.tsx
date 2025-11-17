@@ -34,8 +34,8 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import ROUTES from "@/constants/routes";
-import { ActionResponse } from "@/types";
-import { isValidDate, formatDate, cn } from "@/lib/utils";
+import { ActionResponse, Country } from "@/types";
+import { isValidDate, formatDate, cn, formatToISODate } from "@/lib/utils";
 import {
   Popover,
   PopoverTrigger,
@@ -44,12 +44,21 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { fieldLabels, selectOptions } from "@/constants";
+import { useEffect } from "react";
+import { api } from "@/lib/api";
+import { country } from "@/types/country";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, any>;
   defaultValues: T;
   onSubmit: (data: T) => Promise<ActionResponse>;
   formType: "SIGN_IN" | "SIGN_UP";
+}
+interface SelectOptions {
+  gendor: { id: string; name: string }[];
+  nationality: country[];
+  city: string[];
 }
 
 const AuthForm = <T extends FieldValues>({
@@ -58,12 +67,67 @@ const AuthForm = <T extends FieldValues>({
   formType,
   onSubmit,
 }: AuthFormProps<T>) => {
+  const router = useRouter();
+  const { refreshAuth } = useAuth();
+
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date("2025-06-01"));
   const [month, setMonth] = useState<Date | undefined>(date);
   const [value, setValue] = useState(formatDate(date));
 
-  const router = useRouter();
+  const [selectOptions, setSelectOptions] = useState<SelectOptions>({
+    gendor: [
+      { id: "male", name: "ذكر" },
+      { id: "female", name: "أنثى" },
+    ],
+    nationality: [],
+    city: [],
+  });
+
+  const fetchCountries = async () => {
+    try {
+      const response = await api.countries.getAll();
+      if (!response.success) throw new Error("Failed to fetch countries");
+      setSelectOptions((prev) => ({
+        ...prev,
+        nationality: response.data as Country[],
+      }));
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+      // handle error state here
+    }
+  };
+
+  const fetchCitiesByCountry = async (countryId: string) => {
+    try {
+      const response = await api.cities.getByCountryId(countryId);
+      if (!response.success) throw new Error("Failed to fetch cities");
+      setSelectOptions((prev) => ({
+        ...prev,
+        city: response.data as string[],
+      }));
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+      // handle error state here
+    }
+  };
+
+  const handleCountryChange = (value: string, field: any) => {
+    field.onChange(value);
+
+    if (value) {
+      fetchCitiesByCountry(value);
+    } else {
+      setSelectOptions((prev) => ({
+        ...prev,
+        city: [],
+      }));
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
 
   const form = useForm<T>({
     resolver: zodResolver(schema),
@@ -73,7 +137,11 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    const result = (await onSubmit(data)) as ActionResponse;
+    const formattedData = {
+      ...data,
+      dateOfBirth: formatToISODate(data.dateOfBirth),
+    };
+    const result = (await onSubmit(formattedData as T)) as ActionResponse;
 
     if (result?.success) {
       toast.success("تم بنجاح", {
@@ -82,7 +150,15 @@ const AuthForm = <T extends FieldValues>({
             ? "تم تسجيل الدخول بنجاح"
             : "تم إنشاء الحساب بنجاح",
       });
-      router.push(ROUTES.HOME);
+
+      // Refresh authentication state after successful login
+      if (formType === "SIGN_IN") {
+        // Small delay to ensure cookie is set
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        await refreshAuth();
+      }
+
+      router.push(ROUTES.NEW);
     } else {
       toast.error(`حدث خطأ: ${result?.status}`, {
         description: result?.error?.message || "حدث خطأ غير متوقع",
@@ -138,7 +214,11 @@ const AuthForm = <T extends FieldValues>({
                       <FormControl>
                         {isSelect ? (
                           <Select
-                            onValueChange={field.onChange}
+                            onValueChange={(value) =>
+                              name === "nationality"
+                                ? handleCountryChange(value, field)
+                                : field.onChange(value)
+                            }
                             defaultValue={field.value}
                             dir="rtl"
                           >
@@ -146,15 +226,25 @@ const AuthForm = <T extends FieldValues>({
                               <SelectValue placeholder={`اختر ${label}`} />
                             </SelectTrigger>
                             <SelectContent className="w-[100px] sm:w-[300px] ">
-                              {selectOptions[name].map((option) => (
-                                <SelectItem
-                                  key={option}
-                                  value={option}
-                                  className="w-full"
-                                >
-                                  {option}
-                                </SelectItem>
-                              ))}
+                              {selectOptions[name as keyof SelectOptions]?.map(
+                                (option: any) => (
+                                  <SelectItem
+                                    key={option.id}
+                                    value={option.id}
+                                    className="w-full"
+                                  >
+                                    {name === "city" &&
+                                      selectOptions.city.length === 0 && (
+                                        <SelectItem value="">
+                                          اختر الجنسية اولا
+                                        </SelectItem>
+                                      )}
+                                    {name === "city"
+                                      ? option.cityEName
+                                      : option.countryEName || option.name}
+                                  </SelectItem>
+                                )
+                              )}
                             </SelectContent>
                           </Select>
                         ) : isDate ? (

@@ -5,14 +5,15 @@ import { cn } from "@/lib/utils";
 import MobileNavigation from "./MobileNavigation";
 import ROUTES from "@/constants/routes";
 import NavLinks from "./NavLinks";
-import { useAuth } from "@/contexts/AuthContext";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
+
   return (
     <nav className="bg-white xl:px-12">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
@@ -27,10 +28,11 @@ const Navbar = () => {
         </div>
 
         {isAuthenticated ? (
-          <div className="flex gap-3 justify-center items-center">
+          <div className="hidden lg:flex gap-3 justify-center items-center">
             <Avatar>
-              {/*  for test on my computer - delete || "CN" */}
-              {user?.userName.slice(0, 2) || "رش"}
+              <AvatarFallback>
+                {user ? user?.userName.slice(0, 2) : "CN"}
+              </AvatarFallback>
             </Avatar>
 
             <LogOut

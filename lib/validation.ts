@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const LocalLicenceSchema = z.object({
-  licenseClassId: z.string().nonempty("من فضلك اختر فئة الرخصة"),
+  licenseClassId: z.string().min(1, "من فضلك اختر فئة الرخصة"),
 });
 
 export const signInSchema = z.object({

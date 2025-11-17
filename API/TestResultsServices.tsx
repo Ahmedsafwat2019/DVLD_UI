@@ -1,7 +1,7 @@
 import { testResult } from "@/types/testResult";
 import { ApiClient } from "./GeneralApi";
 
-const apiClient = new ApiClient("http://localhost:5240/api/Tests");
+const apiClient = new ApiClient("${env.BASE_URL}/Tests");
 
 export const AddNewResult = async (data: testResult) => {
   try {

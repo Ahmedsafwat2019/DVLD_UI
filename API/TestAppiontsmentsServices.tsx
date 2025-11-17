@@ -1,9 +1,10 @@
 // services/testAppointmentService.ts
+import { env } from "@/constants/env";
 import { ApiClient } from "./GeneralApi";
 import { testAppointsment } from "@/types/testAppointment";
 import { TestAppointmentsView } from "@/types/testAppointmentView";
 
-const apiClient = new ApiClient("http://localhost:5240/api/TestAppointments");
+const apiClient = new ApiClient(`${env.BASE_URL}/TestAppointments`);
 
 export const getAllTestAppointments = async (): Promise<
   TestAppointmentsView[]

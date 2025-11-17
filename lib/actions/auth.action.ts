@@ -1,9 +1,7 @@
-"use server";
+"use client";
 
+import { api } from "@/lib/api";
 import { ActionResponse } from "@/types";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5240/api/auth";
 
 /**
  * SIGN UP ACTION
@@ -12,44 +10,57 @@ export async function signUpWithCredentails(
   data: Record<string, any>
 ): Promise<ActionResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/AddCitizen`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
+    const requestBody = {
+      nationalNo: data.nationalNo,
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+      firstName: data.firstName,
+      secondName: data.secondName,
+      thirdName: data.thirdName,
+      lastName: data.lastName,
+      dateOfBirth: data.dateOfBirth,
+      gendor: data.gendor,
+      address: data.address,
+      phone: data.phone,
+      nationality: data.nationality,
+      city: data.city,
+    };
 
-    const contentType = response.headers.get("Content-Type");
-    const responseData =
-      contentType && contentType.includes("application/json")
-        ? await response.json()
-        : await response.text();
+    console.log(requestBody);
 
-    if (!response.ok) {
-      console.error("Sign-up failed:", responseData);
+    const response = await api.auth.signup(requestBody);
+
+    if (!response.success) {
+      const errorMessage =
+        response.error?.message ||
+        "فشل إنشاء الحساب. الرجاء التحقق من البيانات.";
+
       return {
         success: false,
         status: response.status,
         error: {
-          message:
-            responseData?.message ||
-            "فشل إنشاء الحساب. الرجاء التحقق من البيانات.",
+          message: errorMessage,
+          details: response.error?.details,
         },
       };
     }
 
-    console.log("Sign-up success:", responseData);
-    return { success: true, status: 200, data: responseData };
+    return {
+      success: true,
+      status: 200,
+      data: response.data as any,
+    };
   } catch (error: any) {
-    console.error(" Network error (sign-up):", error);
     return {
       success: false,
       status: 500,
-      error: { message: `خطأ في الاتصال بالخادم: ${error.message}` },
+      error: {
+        message: `خطأ في الاتصال بالخادم: ${error.message}`,
+      },
     };
   }
 }
-
 /**
  * SIGN IN ACTION
  */
@@ -57,36 +68,29 @@ export async function signInWithCredentails(
   data: Record<string, any>
 ): Promise<ActionResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "include",
+    const response = await api.auth.login({
+      email: data.email,
+      password: data.password,
     });
 
-    const contentType = response.headers.get("Content-Type");
-    const responseData =
-      contentType && contentType.includes("application/json")
-        ? await response.json()
-        : await response.text();
-
-    if (!response.ok) {
-      console.error("Sign-in failed:", responseData);
+    if (!response.success) {
       return {
         success: false,
         status: response.status,
         error: {
           message:
-            responseData?.message ||
+            response.error?.message ||
             "فشل تسجيل الدخول، الرجاء التحقق من البريد الإلكتروني وكلمة المرور.",
         },
       };
     }
 
-    console.log("Sign-in success:", responseData);
-    return { success: true, status: 200, data: responseData };
+    return {
+      success: true,
+      status: 200,
+      data: response.data as any,
+    };
   } catch (error: any) {
-    console.error("Network error (sign-in):", error);
     return {
       success: false,
       status: 500,

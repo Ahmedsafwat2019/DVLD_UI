@@ -8,7 +8,15 @@ export interface User {
 export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   logout: () => Promise<void>;
+  refreshAuth: () => Promise<void>;
+}
+
+export interface UserResponse {
+  userName: string;
+  role: string;
+  personID?: string;
 }
 
 // Application Types

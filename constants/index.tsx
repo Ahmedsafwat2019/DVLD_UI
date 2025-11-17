@@ -130,6 +130,14 @@ export const selectOptions: Record<string, string[]> = {
   gendor: ["ذكر", "أنثى"],
   nationality: ["مصر", "السعودية", "الأردن", "الإمارات", "سوريا", "اليمن"],
   city: ["القاهرة", "الإسكندرية", "الجيزة", "المنصورة", "أسيوط"],
+  licenseClassId: [
+    "الدرجة الأولى",
+    "الدرجة الثانية",
+    "الدرجة الثالثة",
+    "الدراجة النارية",
+    "المركبات الثقيلة",
+    "المركبات الخفيفة",
+  ],
 };
 
 export const fieldLabels: Record<string, string> = {
