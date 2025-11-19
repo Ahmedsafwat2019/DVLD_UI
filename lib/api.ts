@@ -59,11 +59,16 @@ export const api = {
       }),
   },
   applications: {
+    getAll: () => fetchHandler(`${API_BASE_URL}/applications/get`),
     addLocal: (data: { licenseClassId: string; ApplicantPersonId: string }) =>
       fetchHandler(`${API_BASE_URL}/Applications/AddLocal`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(data),
       }),
+  },
+  persons: {
+    getAll: () => fetchHandler(`${API_BASE_URL}/persons/get`),
+    getById: (id: string) => fetchHandler(`${API_BASE_URL}/persons/${id}`),
   },
 };

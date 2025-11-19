@@ -153,12 +153,10 @@ const AuthForm = <T extends FieldValues>({
 
       // Refresh authentication state after successful login
       if (formType === "SIGN_IN") {
-        // Small delay to ensure cookie is set
         await new Promise((resolve) => setTimeout(resolve, 100));
         await refreshAuth();
       }
-
-      router.push(ROUTES.NEW);
+      router.push(ROUTES.HOME);
     } else {
       toast.error(`حدث خطأ: ${result?.status}`, {
         description: result?.error?.message || "حدث خطأ غير متوقع",
@@ -171,7 +169,7 @@ const AuthForm = <T extends FieldValues>({
   return (
     <section
       className={cn(
-        `light-border bg-light-800 border px-4 py-10 shadow-md max-w-4xl sm:px-8 rounded-md`,
+        `bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-10 shadow-xl rounded-2xl max-w-4xl sm:px-8`,
         isSignIn
           ? "sm:min-w-[520px]"
           : "min-w-full md:min-w-2xl lg:min-w-4xl xl:min-w-5xl"
@@ -181,7 +179,7 @@ const AuthForm = <T extends FieldValues>({
         dir="rtl"
         className={cn(`mx-auto`, isSignIn ? "max-w-md" : "max-w-4xl")}
       >
-        <h2 className="text-center font-bold text-3xl sm:text-4xl text-dark-gray mb-6">
+        <h2 className="text-center font-bold text-3xl sm:text-4xl text-gray-900 dark:text-white mb-8">
           {isSignIn ? "تسجيل الدخول" : "إنشاء حساب جديد"}
         </h2>
 
@@ -209,8 +207,10 @@ const AuthForm = <T extends FieldValues>({
                   const isAccepted = name === "terms";
 
                   return (
-                    <FormItem className="flex w-full flex-col gap-2">
-                      <FormLabel>{label}</FormLabel>
+                    <FormItem className="flex w-full flex-col gap-2.5">
+                      <FormLabel className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {label}
+                      </FormLabel>
                       <FormControl>
                         {isSelect ? (
                           <Select
@@ -222,10 +222,10 @@ const AuthForm = <T extends FieldValues>({
                             defaultValue={field.value}
                             dir="rtl"
                           >
-                            <SelectTrigger className="min-h-12 rounded-1.5 px-3 py-2 border-blue-2 ">
+                            <SelectTrigger className="min-h-12 rounded-lg px-4 py-3 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:border-brand-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:focus:ring-brand-800 transition-all duration-200">
                               <SelectValue placeholder={`اختر ${label}`} />
                             </SelectTrigger>
-                            <SelectContent className="w-[100px] sm:w-[300px] ">
+                            <SelectContent className="w-[100px] sm:w-[300px] bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
                               {selectOptions[name as keyof SelectOptions]?.map(
                                 (option: any) => (
                                   <SelectItem
@@ -248,13 +248,13 @@ const AuthForm = <T extends FieldValues>({
                             </SelectContent>
                           </Select>
                         ) : isDate ? (
-                          <div className="relative flex items-center gap-2 ">
+                          <div className="relative flex items-center gap-2">
                             <Input
                               dir="ltr"
                               id="date"
                               value={field.value || value}
                               placeholder="June 01, 2025"
-                              className="bg-background pr-10 p-6 w-full rounded-lg border-blue-2 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
+                              className="bg-white dark:bg-gray-700 pr-10 px-4 py-3 min-h-12 w-full rounded-lg border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-brand-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:focus:ring-brand-800 transition-all duration-200"
                               onChange={(e) => {
                                 const inputDate = new Date(e.target.value);
                                 const formatted = formatDate(inputDate);
@@ -277,14 +277,14 @@ const AuthForm = <T extends FieldValues>({
                                 <Button
                                   id="date-picker"
                                   variant="ghost"
-                                  className="absolute top-1/2 right-2 flex items-center justify-center rounded-md  hover:bg-gray-100 transition-colors size-8 -translate-y-1/2"
+                                  className="absolute top-1/2 right-3 flex items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors size-8 -translate-y-1/2"
                                 >
-                                  <CalendarIcon className="size-4 text-gray-500" />
+                                  <CalendarIcon className="size-4 text-gray-500 dark:text-gray-400" />
                                   <span className="sr-only">Select date</span>
                                 </Button>
                               </PopoverTrigger>
                               <PopoverContent
-                                className="w-[220px] p-3 bg-white rounded-xl  shadow-xl border border-gray-200"
+                                className="w-[220px] p-3 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700"
                                 align="end"
                                 sideOffset={8}
                               >
@@ -342,10 +342,10 @@ const AuthForm = <T extends FieldValues>({
                             {...field}
                             placeholder={`أدخل ${label}`}
                             className={cn(
-                              "style-input border-blue-2 duration-200 transition-colors bg-white",
+                              "min-h-12 px-4 py-3 rounded-lg text-base bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border transition-all duration-200",
                               form.formState.errors[name]
-                                ? "border-red-500  hover:border-red-500  no-focus "
-                                : "hover:border-blue-700 focus:border-blue-600"
+                                ? "border-error-500 hover:border-error-600 focus:border-error-500 focus:ring-2 focus:ring-error-200 dark:focus:ring-error-800"
+                                : "border-gray-300 dark:border-gray-600 hover:border-brand-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:focus:ring-brand-800"
                             )}
                           />
                         )}
@@ -359,34 +359,37 @@ const AuthForm = <T extends FieldValues>({
 
             <Button
               disabled={form.formState.isSubmitting}
-              className="primary-gradient min-h-12 w-full rounded-2 px-4 py-3 font-inter cursor-pointer text-lg col-span-2"
+              className="min-h-12 w-full rounded-lg px-4 py-3 text-base font-semibold col-span-2 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-brand-500 dark:to-brand-600 dark:hover:from-brand-600 dark:hover:to-brand-700"
             >
-              {form.formState.isSubmitting
-                ? isSignIn
-                  ? "جاري تسجيل الدخول..."
-                  : "جاري إنشاء الحساب..."
-                : isSignIn
-                  ? "تسجيل الدخول"
-                  : "إنشاء حساب"}
+              {form.formState.isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  {isSignIn ? "جاري تسجيل الدخول..." : "جاري إنشاء الحساب..."}
+                </span>
+              ) : isSignIn ? (
+                "تسجيل الدخول"
+              ) : (
+                "إنشاء حساب"
+              )}
             </Button>
 
             <div className="col-span-2">
               {isSignIn ? (
-                <p className="text-center mt-4 text-gray-600">
+                <p className="text-center mt-4 text-gray-600 dark:text-gray-400">
                   لا تملك حساباً؟{" "}
                   <Link
                     href={ROUTES.SIGN_UP}
-                    className="font-semibold text-blue-600 hover:underline"
+                    className="font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 hover:underline transition-colors"
                   >
                     إنشاء حساب جديد
                   </Link>
                 </p>
               ) : (
-                <p className="text-center mt-4 text-gray-600">
+                <p className="text-center mt-4 text-gray-600 dark:text-gray-400">
                   لديك حساب بالفعل؟{" "}
                   <Link
                     href={ROUTES.SIGN_IN}
-                    className="font-semibold text-blue-600 hover:underline"
+                    className="font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 hover:underline transition-colors"
                   >
                     تسجيل الدخول
                   </Link>

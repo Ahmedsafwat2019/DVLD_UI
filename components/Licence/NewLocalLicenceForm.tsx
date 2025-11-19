@@ -226,8 +226,10 @@ const NewLocalLicenceForm = () => {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"></div>
-          <p className="mt-4 text-gray-600">جاري التحميل...</p>
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-brand-600 dark:border-gray-700 dark:border-t-brand-500"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            جاري التحميل...
+          </p>
         </div>
       </div>
     );
@@ -240,10 +242,10 @@ const NewLocalLicenceForm = () => {
 
   return (
     <>
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap">
-          <div className="w-full px-4">
-            <div className="shadow-three dark:bg-dark dark:bg-gray-800 border-gray-100 dark:border-gray-700 mx-auto max-w-[600px] rounded-xl border bg-white px-6 py-8 sm:p-8">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-center">
+          <div className="w-full max-w-[600px]">
+            <div className="shadow-three dark:bg-gray-800 border-gray-100 dark:border-gray-700 rounded-xl border bg-white px-6 py-8 sm:p-8">
               <div className="mb-3 text-center">
                 <h3 className="text-gray-800 mb-1 text-xl font-bold dark:text-white">
                   اختر نوع الرخصة
@@ -271,7 +273,7 @@ const NewLocalLicenceForm = () => {
                         validateField("licenseClassId", e.target.value)
                       }
                       disabled={isLoadingClasses || isSubmitting}
-                      className="border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-700 dark:text-gray-200 w-full cursor-pointer appearance-none rounded-lg border bg-white px-4 py-4 text-base transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:border-blue-400 dark:focus:ring-blue-800"
+                      className="border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-700 dark:text-gray-200 w-full cursor-pointer appearance-none rounded-lg border bg-white px-4 py-4 text-base transition-all duration-300 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:border-brand-400 dark:focus:ring-brand-800"
                     >
                       <option value="">
                         {isLoadingClasses
@@ -284,7 +286,7 @@ const NewLocalLicenceForm = () => {
                         </option>
                       ))}
                     </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <svg
                         className="text-gray-400 h-5 w-5"
                         fill="none"
@@ -316,7 +318,7 @@ const NewLocalLicenceForm = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting || isLoadingClasses}
-                    className="dark:shadow-gray-900/20 dark:hover:shadow-gray-900/30 flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600"
+                    className="dark:shadow-gray-900/20 dark:hover:shadow-gray-900/30 flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-brand-600 to-brand-700 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-brand-700 hover:to-brand-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 dark:from-brand-500 dark:to-brand-600 dark:hover:from-brand-600 dark:hover:to-brand-700"
                   >
                     {isSubmitting ? (
                       <>
@@ -324,22 +326,7 @@ const NewLocalLicenceForm = () => {
                         جاري الإرسال...
                       </>
                     ) : (
-                      <>
-                        <svg
-                          className="mr-2 h-5 w-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        إرسال الطلب
-                      </>
+                      <>إرسال الطلب</>
                     )}
                   </button>
                 </div>
@@ -351,12 +338,12 @@ const NewLocalLicenceForm = () => {
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
           <div className="dark:bg-gray-800 mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
             <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/30">
                 <svg
-                  className="h-8 w-8 text-blue-600 dark:text-blue-400"
+                  className="h-8 w-8 text-brand-600 dark:text-brand-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -386,7 +373,7 @@ const NewLocalLicenceForm = () => {
                 <button
                   onClick={handleSubmitForm}
                   disabled={isSubmitting}
-                  className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex-1 rounded-lg bg-brand-600 px-4 py-2 text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-brand-500 dark:hover:bg-brand-600"
                 >
                   {isSubmitting ? "جاري الإرسال..." : "تأكيد"}
                 </button>

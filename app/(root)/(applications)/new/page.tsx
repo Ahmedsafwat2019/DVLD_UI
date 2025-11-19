@@ -1,5 +1,5 @@
-import NewLocalLicenceForm from "@/components/forms/NewLocalLicenceForm";
-// import NewLocalLicenceForm from "@/components/Licence/NewLocalLicenceForm";
+// import NewLocalLicenceForm from "@/components/forms/NewLocalLicenceForm";
+import NewLocalLicenceForm from "@/components/Licence/NewLocalLicenceForm";
 
 const NewLocalLicencePage = () => {
   return (

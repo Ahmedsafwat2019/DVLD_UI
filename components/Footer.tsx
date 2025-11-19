@@ -9,7 +9,7 @@ import { FacebookIcon } from "./ui/icons/lucide-facebook";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark-gray text-white-text">
+    <footer className="bg-gray-950   text-white-text">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">

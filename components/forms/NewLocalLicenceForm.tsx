@@ -12,7 +12,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -28,10 +27,13 @@ import ROUTES from "@/constants/routes";
 import { LocalLicenceSchema } from "@/lib/validation";
 import { selectOptions } from "@/constants";
 import { ConfirmDialog } from "../Dialog";
+import { useEffect } from "react";
+import { api } from "@/lib/api";
 
 const NewLocalLicenceForm = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [licenseClasses, setLicenseClasses] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(LocalLicenceSchema),
@@ -60,6 +62,21 @@ const NewLocalLicenceForm = () => {
       toast.error("حدث خطأ أثناء الإرسال");
     }
   };
+
+  const fetchLicenceClasses = async () => {
+    try {
+      const result = await api.licenseClasses.getAll();
+      if (result.success) {
+        setLicenseClasses(result.data);
+      }
+    } catch {
+      toast.error("حدث خطأ أثناء الإرسال");
+    }
+  };
+  console.log(licenseClasses);
+  useEffect(() => {
+    fetchLicenceClasses();
+  }, []);
 
   return (
     <section

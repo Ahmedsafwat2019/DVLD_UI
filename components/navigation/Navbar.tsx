@@ -31,7 +31,7 @@ const Navbar = () => {
           <div className="hidden lg:flex gap-3 justify-center items-center">
             <Avatar>
               <AvatarFallback>
-                {user ? user?.userName.slice(0, 2) : "CN"}
+                {user ? user?.userName.slice(0, 2).toUpperCase() : "CN"}
               </AvatarFallback>
             </Avatar>
 
