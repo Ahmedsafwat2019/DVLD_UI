@@ -29,11 +29,12 @@ import { selectOptions } from "@/constants";
 import { ConfirmDialog } from "../Dialog";
 import { useEffect } from "react";
 import { api } from "@/lib/api";
+import type { LicenseClass } from "@/types";
 
 const NewLocalLicenceForm = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [licenseClasses, setLicenseClasses] = useState([]);
+  const [licenseClasses, setLicenseClasses] = useState<LicenseClass[]>([]);
 
   const form = useForm({
     resolver: zodResolver(LocalLicenceSchema),
@@ -66,8 +67,8 @@ const NewLocalLicenceForm = () => {
   const fetchLicenceClasses = async () => {
     try {
       const result = await api.licenseClasses.getAll();
-      if (result.success) {
-        setLicenseClasses(result.data);
+      if (result.success && result.data) {
+        setLicenseClasses(result.data as LicenseClass[]);
       }
     } catch {
       toast.error("حدث خطأ أثناء الإرسال");

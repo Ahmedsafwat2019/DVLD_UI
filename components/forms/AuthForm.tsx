@@ -34,7 +34,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import ROUTES from "@/constants/routes";
-import { ActionResponse, Country } from "@/types";
+import type { ActionResponse, Country } from "@/types";
 import { isValidDate, formatDate, cn, formatToISODate } from "@/lib/utils";
 import {
   Popover,
@@ -46,7 +46,6 @@ import { useState } from "react";
 import { fieldLabels, selectOptions } from "@/constants";
 import { useEffect } from "react";
 import { api } from "@/lib/api";
-import { country } from "@/types/country";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface AuthFormProps<T extends FieldValues> {
@@ -57,7 +56,7 @@ interface AuthFormProps<T extends FieldValues> {
 }
 interface SelectOptions {
   gendor: { id: string; name: string }[];
-  nationality: country[];
+  nationality: Country[];
   city: string[];
 }
 
@@ -142,6 +141,7 @@ const AuthForm = <T extends FieldValues>({
       dateOfBirth: formatToISODate(data.dateOfBirth),
     };
     const result = (await onSubmit(formattedData as T)) as ActionResponse;
+    console.log(result);
 
     if (result?.success) {
       toast.success("تم بنجاح", {

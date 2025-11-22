@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import UserDropdown from "../UserDropdown";
 
 const Navbar = () => {
   const { isAuthenticated, logout, user } = useAuth();
@@ -29,16 +30,7 @@ const Navbar = () => {
 
         {isAuthenticated ? (
           <div className="hidden lg:flex gap-3 justify-center items-center">
-            <Avatar>
-              <AvatarFallback>
-                {user ? user?.userName.slice(0, 2).toUpperCase() : "CN"}
-              </AvatarFallback>
-            </Avatar>
-
-            <LogOut
-              className="size-8 text-xl text-red-700 cursor-pointer hover:bg-red-50 transition-colors duration-300 p-1 rounded-sm"
-              onClick={logout}
-            />
+            <UserDropdown />
           </div>
         ) : (
           <div className="hidden items-center gap-3 lg:flex">

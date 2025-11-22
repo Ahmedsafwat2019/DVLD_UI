@@ -1,178 +1,66 @@
-// Auth Types
-export interface User {
-  userName: string;
-  userRole: string;
-  personID?: string;
-}
+/**
+ * Central Type Exports
+ *
+ * This file serves as the main entry point for all TypeScript types.
+ * Import types from here rather than individual files for better maintainability.
+ *
+ * Example:
+ * import type { User, ActionResponse, City } from '@/types';
+ */
 
-export interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  logout: () => Promise<void>;
-  refreshAuth: () => Promise<void>;
-}
+// Auth & User Types
+export type {
+  User,
+  AuthContextType,
+  UserResponse,
+} from "./auth";
 
-export interface UserResponse {
-  userName: string;
-  role: string;
-  personID?: string;
-}
-
-// Application Types
-export type LocalDrivingLicenseApplication = {
-  localDrivingLicenseApplicationId: string;
-  applicationId: string;
-  personID: string;
-  nationalNum: string;
-  fullName: string;
-  age: number;
-  gendor: "male" | "female" | "unknown";
-  country: string;
-  city: string;
-  paidFees: number;
-  className: string;
-  currentState: number;
-  createdBy: string | null;
-  createdDate: string;
-  updatedDate: string | null;
-};
+// Location Types
+export type {
+  Country,
+  City,
+} from "./location";
 
 // Person Types
-export type Person = {
-  personID: string;
-  nationalNo: string;
-  fullName: string;
-  gendor?: string;
-  age?: number;
-  phone?: string;
-  country: string;
-  city: string;
-  currentState: number;
-  createdDate?: string;
-  createdBy?: string;
-};
+export type {
+  Person,
+} from "./person";
 
-// Country Types
-export interface Country {
-  Id: string;
-  CurrentState?: number;
-  countryEName: string;
-}
+// License & Application Types
+export type {
+  LicenseClass,
+  LocalDrivingLicenseApplication,
+} from "./license";
 
-// City Types
-export interface City {
-  Id: string;
-  CurrentState?: number;
-  cityEName: string;
-  countryId: string;
-}
+// Test & Appointment Types
+export type {
+  TestAppointment,
+  TestAppointmentView,
+  TestResult,
+} from "./test";
 
-// License Types
-export interface LicenseClass {
-  id: string;
-  className: string;
-  classDescription: string;
-  classFees: number;
-  minimumAllowedAge: number;
-}
+// CMS & Marketing Types
+export type {
+  Author,
+  Blog,
+  Brand,
+  Feature,
+  Testimonial,
+  Menu,
+  MenuItem,
+} from "./cms";
 
-// Test Types
-export interface TestAppointment {
-  id: string;
-  testType: string;
-  testDate: string;
-  testTime: string;
-  location: string;
-  status: string;
-}
+// Common & Shared Types
+export type {
+  ApiResponse,
+  ActionResponse,
+  PaginationParams,
+  PaginatedResponse,
+  TableColumn,
+  Gender,
+  BaseEntity,
+} from "./common";
 
-export interface TestResult {
-  id: string;
-  testId: string;
-  score: number;
-  passed: boolean;
-  testDate: string;
-}
-
-// Blog Types
-export interface BlogPost {
-  id: number;
-  title: string;
-  paragraph: string;
-  image: string;
-  author: {
-    name: string;
-    image: string;
-    designation: string;
-  };
-  tags: string[];
-  publishDate: string;
-}
-
-// Brand Types
-export interface Brand {
-  id: number;
-  name: string;
-  href: string;
-  image: string;
-  imageLight: string;
-}
-
-// Feature Types
-export interface Feature {
-  id: number;
-  icon: string;
-  title: string;
-  paragraph: string;
-}
-
-// Testimonial Types
-export interface Testimonial {
-  id: number;
-  name: string;
-  designation: string;
-  content: string;
-  image: string;
-  star: number;
-}
-
-// Menu Types
-export interface MenuItem {
-  title: string;
-  path?: string;
-  submenu?: {
-    title: string;
-    path: string;
-  }[];
-}
-
-// Common Types
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-}
-
-export type ActionResponse<T = null> = {
-  success: boolean;
-  data?: T;
-  error?: {
-    message: string;
-    details?: Record<string, string[]>;
-  };
-  status?: number;
-};
-export interface PaginationParams {
-  page: number;
-  limit: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
-
-export interface TableColumn {
-  key: string;
-  title: string;
-  sortable?: boolean;
-  render?: (value: any, record: any) => React.ReactNode;
-}
+export {
+  EntityState,
+} from "./common";

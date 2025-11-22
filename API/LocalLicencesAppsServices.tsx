@@ -1,8 +1,7 @@
 // services/payPalService.ts
 import { promises } from "dns";
 import { ApiClient } from "./GeneralApi";
-import { LocalDrivingLicenseApplication } from "@/types/localDrivingLicenceViewType";
-import { testAppointsment } from "@/types/testAppointment";
+import type { LocalDrivingLicenseApplication, TestAppointment } from "@/types";
 import { env } from "@/constants/env";
 
 const apiClient = new ApiClient(

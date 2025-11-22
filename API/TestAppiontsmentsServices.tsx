@@ -1,17 +1,16 @@
 // services/testAppointmentService.ts
 import { env } from "@/constants/env";
 import { ApiClient } from "./GeneralApi";
-import { testAppointsment } from "@/types/testAppointment";
-import { TestAppointmentsView } from "@/types/testAppointmentView";
+import type { TestAppointment, TestAppointmentView } from "@/types";
 
 const apiClient = new ApiClient(`${env.BASE_URL}/TestAppointments`);
 
 export const getAllTestAppointments = async (): Promise<
-  TestAppointmentsView[]
+  TestAppointmentView[]
 > => {
   try {
     console.log("Calling getAllTestAppointments API...");
-    const response = await apiClient.get<TestAppointmentsView[]>("/GetViews");
+    const response = await apiClient.get<TestAppointmentView[]>("/GetViews");
     console.log("API Response:", response);
 
     // Handle different response structures
@@ -29,7 +28,7 @@ export const getAllTestAppointments = async (): Promise<
   }
 };
 
-export const addTestAppointment = async (data: testAppointsment) => {
+export const addTestAppointment = async (data: TestAppointment) => {
   try {
     console.log("Adding test appointment:", data);
     const response = await apiClient.post("/AddNewAppointment", data);

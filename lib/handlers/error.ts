@@ -36,8 +36,13 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
 
     // Only log non-auth errors or if it's not a 401/403/500 auth issue
     if (!isAuthError || (error.statusCode !== 401 && error.statusCode !== 403 && error.statusCode !== 500)) {
+      // Log the full API response if available
+      const logData: any = { err: error };
+      if ((error as any).apiResponse) {
+        logData.apiResponse = (error as any).apiResponse;
+      }
       logger.error(
-        { err: error },
+        logData,
         `${responseType.toUpperCase()} Error: ${error.message}`
       );
     }

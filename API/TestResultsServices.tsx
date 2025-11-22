@@ -1,9 +1,9 @@
-import { testResult } from "@/types/testResult";
+import type { TestResult } from "@/types";
 import { ApiClient } from "./GeneralApi";
 
 const apiClient = new ApiClient("${env.BASE_URL}/Tests");
 
-export const AddNewResult = async (data: testResult) => {
+export const AddNewResult = async (data: TestResult) => {
   try {
     console.log("Adding test appointment:", data);
     const response = await apiClient.post("/Add", data);

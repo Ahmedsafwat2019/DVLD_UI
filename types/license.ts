@@ -1,6 +1,16 @@
-import type { JSX } from "react";
+/**
+ * License & Application Types
+ */
 
-export type LocalDrivingLicenseApplication = {
+export interface LicenseClass {
+  id: string;
+  className: string;
+  classDescription: string;
+  classFees: number;
+  minimumAllowedAge: number;
+}
+
+export interface LocalDrivingLicenseApplication {
   localDrivingLicenseApplicationId: string;
   applicationId: string;
   personID: string;
@@ -16,4 +26,4 @@ export type LocalDrivingLicenseApplication = {
   createdBy: string | null;
   createdDate: string;
   updatedDate: string | null;
-};
+}

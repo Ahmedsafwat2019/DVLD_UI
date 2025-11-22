@@ -1,4 +1,4 @@
-import { fetchHandler } from "./handlers/fetch";
+// import { fetch } from "./handlers/fetch";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5240/api";
@@ -6,20 +6,19 @@ const API_BASE_URL =
 export const api = {
   account: {
     me: () =>
-      fetchHandler(`${API_BASE_URL}/account/me`, {
+      fetch(`${API_BASE_URL}/account/me`, {
         credentials: "include",
-        silentAuthErrors: true,
       }),
   },
   auth: {
     login: (data: { email: string; password: string }) =>
-      fetchHandler(`${API_BASE_URL}/auth/login`, {
+      fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(data),
       }),
     logout: () =>
-      fetchHandler(`${API_BASE_URL}/auth/logout`, {
+      fetch(`${API_BASE_URL}/auth/logout`, {
         credentials: "include",
       }),
     signup: (data: {
@@ -38,37 +37,37 @@ export const api = {
       nationality: string;
       city: string;
     }) =>
-      fetchHandler(`${API_BASE_URL}/auth/addcitizen`, {
+      fetch(`${API_BASE_URL}/auth/addcitizen`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(data),
       }),
   },
   cities: {
-    getAll: () => fetchHandler(`${API_BASE_URL}/Cities/Get`),
+    getAll: () => fetch(`${API_BASE_URL}/Cities/Get`),
     getByCountryId: (id: string) =>
-      fetchHandler(`${API_BASE_URL}/Cities/GetByCountry/${id}`),
+      fetch(`${API_BASE_URL}/Cities/GetByCountry/${id}`),
   },
   countries: {
-    getAll: () => fetchHandler(`${API_BASE_URL}/Countries/Get`),
+    getAll: () => fetch(`${API_BASE_URL}/Countries/Get`),
   },
   licenseClasses: {
     getAll: () =>
-      fetchHandler(`${API_BASE_URL}/LicenceClasses/Get`, {
+      fetch(`${API_BASE_URL}/LicenceClasses/Get`, {
         credentials: "include",
       }),
   },
   applications: {
-    getAll: () => fetchHandler(`${API_BASE_URL}/applications/get`),
+    getAll: () => fetch(`${API_BASE_URL}/applications/get`),
     addLocal: (data: { licenseClassId: string; ApplicantPersonId: string }) =>
-      fetchHandler(`${API_BASE_URL}/Applications/AddLocal`, {
+      fetch(`${API_BASE_URL}/Applications/AddLocal`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(data),
       }),
   },
   persons: {
-    getAll: () => fetchHandler(`${API_BASE_URL}/persons/get`),
-    getById: (id: string) => fetchHandler(`${API_BASE_URL}/persons/${id}`),
+    getAll: () => fetch(`${API_BASE_URL}/persons/get`),
+    getById: (id: string) => fetch(`${API_BASE_URL}/persons/${id}`),
   },
 };

@@ -5,8 +5,7 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-import UserDropdown from "../header/UserDropdown";
-
+import UserDropdown from "@/components/UserDropdown";
 const AdminHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
