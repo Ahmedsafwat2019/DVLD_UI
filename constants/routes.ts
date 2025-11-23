@@ -3,6 +3,10 @@ const ROUTES = {
   SIGN_IN: "/sign-in",
   SIGN_UP: "/sign-up",
   NEW: "/new",
+  MY_APPLICATIONS: "/my-applications",
+
+  // User Dashboard
+  DASHBOARD: "/dashboard",
 
   // Admin Dashboard
   ADMIN: "/admin",

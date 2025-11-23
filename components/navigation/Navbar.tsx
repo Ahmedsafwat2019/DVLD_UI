@@ -27,8 +27,9 @@ const Navbar = () => {
         <div className="hidden items-center gap-6 lg:flex w-fit flex-1 justify-center">
           <NavLinks />
         </div>
+        {/* return it back to isAuthenticated after Development */}
 
-        {isAuthenticated ? (
+        {true ? (
           <div className="hidden lg:flex gap-3 justify-center items-center">
             <UserDropdown />
           </div>
