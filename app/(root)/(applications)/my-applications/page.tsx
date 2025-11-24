@@ -7,11 +7,8 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  Calendar,
-  User,
   CreditCard,
   Filter,
-  ArrowRight,
   ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -131,69 +128,34 @@ const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
   );
 };
 
-const ApplicationCard = ({ application }: { application: any }) => {
-  const statusConfig = getStatusConfig(application.status);
-
+const ApplicationRow = ({ application }: { application: any }) => {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-theme-lg transition-all duration-200 group">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {application.licenseClass}
-            </h3>
-          </div>
-          <p className="text-sm text-gray-500">رقم الطلب: {application.id}</p>
-        </div>
+    <tr className="border-b border-gray-200 hover:odd:bg-gray-50 hover:even:bg-white transition-colors even:bg-gray-50">
+      <td className="px-4 py-4 text-sm text-gray-900 font-medium">
+        {application.id}
+      </td>
+      <td className="px-4 py-4 text-sm text-gray-900">
+        {application.licenseClass}
+      </td>
+      <td className="px-4 py-4 text-sm text-gray-600">
+        {new Date(application.applicationDate).toLocaleDateString("ar-EG")}
+      </td>
+      <td className="px-4 py-4 text-sm text-gray-900 font-medium">
+        {application.paidFees} ج.م
+      </td>
+      <td className="px-4 py-4">
         <StatusBadge status={application.status} />
-      </div>
-
-      {/* Details Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <div className="flex items-center gap-2 text-sm">
-          <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
-          <span className="text-gray-600">تاريخ التقديم:</span>
-          <span className="font-medium text-gray-900">
-            {new Date(application.applicationDate).toLocaleDateString("ar-EG")}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 text-sm">
-          <CreditCard className="w-4 h-4 text-gray-400 flex-shrink-0" />
-          <span className="text-gray-600">الرسوم المدفوعة:</span>
-          <span className="font-medium text-gray-900">
-            {application.paidFees} ج.م
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
-          <span className="text-gray-600">آخر تحديث:</span>
-          <span className="font-medium text-gray-900">
-            {new Date(application.lastUpdated).toLocaleDateString("ar-EG")}
-          </span>
-        </div>
-      </div>
-
-      {/* Notes */}
-      {application.notes && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-700">
-            <span className="font-medium">ملاحظات: </span>
-            {application.notes}
-          </p>
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="pt-4 border-t border-gray-100">
-        <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors">
+      </td>
+      <td className="px-4 py-4 text-sm text-gray-600">
+        {new Date(application.lastUpdated).toLocaleDateString("ar-EG")}
+      </td>
+      <td className="px-4 py-4">
+        <button className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors">
           <Eye className="w-4 h-4" />
-          عرض التفاصيل
+          عرض
         </button>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 
@@ -341,12 +303,46 @@ export default function MyApplicationsPage() {
           </div>
         </div>
 
-        {/* Applications List */}
+        {/* Applications Table */}
         {filteredApplications.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:gap-6">
-            {filteredApplications.map((application) => (
-              <ApplicationCard key={application.id} application={application} />
-            ))}
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      رقم الطلب
+                    </th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      نوع الرخصة
+                    </th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      تاريخ التقديم
+                    </th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      الرسوم
+                    </th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      الحالة
+                    </th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      آخر تحديث
+                    </th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      الإجراءات
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredApplications.map((application) => (
+                    <ApplicationRow
+                      key={application.id}
+                      application={application}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
