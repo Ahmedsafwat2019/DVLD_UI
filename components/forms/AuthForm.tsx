@@ -42,9 +42,8 @@ import {
   PopoverContent,
 } from "@radix-ui/react-popover";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { fieldLabels, selectOptions } from "@/constants";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { fieldLabels } from "@/constants";
 import { api } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -57,7 +56,7 @@ interface AuthFormProps<T extends FieldValues> {
 interface SelectOptions {
   gendor: { id: string; name: string }[];
   nationality: Country[];
-  city: string[];
+  city: any[];
 }
 
 const AuthForm = <T extends FieldValues>({
@@ -86,10 +85,11 @@ const AuthForm = <T extends FieldValues>({
   const fetchCountries = async () => {
     try {
       const response = await api.countries.getAll();
-      if (!response.success) throw new Error("Failed to fetch countries");
+      const data = await response.json();
+      if (!data.success) throw new Error("Failed to fetch countries");
       setSelectOptions((prev) => ({
         ...prev,
-        nationality: response.data as Country[],
+        nationality: data.data as Country[],
       }));
     } catch (error) {
       console.error("Error fetching countries:", error);
@@ -100,10 +100,11 @@ const AuthForm = <T extends FieldValues>({
   const fetchCitiesByCountry = async (countryId: string) => {
     try {
       const response = await api.cities.getByCountryId(countryId);
-      if (!response.success) throw new Error("Failed to fetch cities");
+      const data = await response.json();
+      if (!data.success) throw new Error("Failed to fetch cities");
       setSelectOptions((prev) => ({
         ...prev,
-        city: response.data as string[],
+        city: data.data || [],
       }));
     } catch (error) {
       console.error("Error fetching cities:", error);
@@ -136,11 +137,13 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    const formattedData = {
-      ...data,
-      dateOfBirth: formatToISODate(data.dateOfBirth),
-    };
-    const result = (await onSubmit(formattedData as T)) as ActionResponse;
+    // const formattedData = {
+    //   ...data,
+    //   dateOfBirth: formatToISODate(data.dateOfBirth),
+    // };
+
+    console.log(data);
+    const result = (await onSubmit(data as T)) as ActionResponse;
     console.log(result);
 
     if (result?.success) {
@@ -226,23 +229,24 @@ const AuthForm = <T extends FieldValues>({
                               <SelectValue placeholder={`اختر ${label}`} />
                             </SelectTrigger>
                             <SelectContent className="w-[100px] sm:w-[300px] bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
-                              {selectOptions[name as keyof SelectOptions]?.map(
-                                (option: any) => (
-                                  <SelectItem
-                                    key={option.id}
-                                    value={option.id}
-                                    className="w-full"
-                                  >
-                                    {name === "city" &&
-                                      selectOptions.city.length === 0 && (
-                                        <SelectItem value="">
-                                          اختر الجنسية اولا
-                                        </SelectItem>
-                                      )}
-                                    {name === "city"
-                                      ? option.cityEName
-                                      : option.countryEName || option.name}
-                                  </SelectItem>
+                              {name === "city" &&
+                              selectOptions.city.length === 0 ? (
+                                <div className="px-2 py-1.5 text-sm text-gray-500 dark:text-gray-400">
+                                  اختر الجنسية اولا
+                                </div>
+                              ) : (
+                                selectOptions[name as keyof SelectOptions]?.map(
+                                  (option: any) => (
+                                    <SelectItem
+                                      key={option.id || option.Id}
+                                      value={option.id || option.Id}
+                                      className="w-full"
+                                    >
+                                      {name === "city"
+                                        ? option.cityEName || option.CityEName
+                                        : option.countryEName || option.name}
+                                    </SelectItem>
+                                  )
                                 )
                               )}
                             </SelectContent>
@@ -308,28 +312,20 @@ const AuthForm = <T extends FieldValues>({
                             </Popover>
                           </div>
                         ) : isAccepted ? (
-                          <FormField
-                            control={form.control}
-                            name={"terms" as Path<T>}
-                            render={({ field }) => (
-                              <FormItem className="flex items-center gap-1 col-span-2">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    id="terms"
-                                    className="m-0"
-                                  />
-                                </FormControl>
-                                <FormLabel
-                                  htmlFor="terms"
-                                  className="text-sm text-gray-700"
-                                >
-                                  الموافقة على الشروط والأحكام
-                                </FormLabel>
-                              </FormItem>
-                            )}
-                          />
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              id="terms"
+                              className="m-0"
+                            />
+                            <Label
+                              htmlFor="terms"
+                              className="text-sm text-gray-700 dark:text-gray-300"
+                            >
+                              الموافقة على الشروط والأحكام
+                            </Label>
+                          </div>
                         ) : (
                           <Input
                             type={

@@ -30,18 +30,18 @@ export async function signUpWithCredentails(
     console.log(requestBody);
 
     const response = await api.auth.signup(requestBody);
+    const result = await response.json();
 
-    if (!response.success) {
+    if (!result.success) {
       const errorMessage =
-        response.error?.message ||
-        "فشل إنشاء الحساب. الرجاء التحقق من البيانات.";
+        result.error?.message || "فشل إنشاء الحساب. الرجاء التحقق من البيانات.";
 
       return {
         success: false,
-        status: response.status,
+        status: result.status || response.status,
         error: {
           message: errorMessage,
-          details: response.error?.details,
+          details: result.error?.details,
         },
       };
     }
@@ -49,7 +49,7 @@ export async function signUpWithCredentails(
     return {
       success: true,
       status: 200,
-      data: response.data as any,
+      data: result.data as any,
     };
   } catch (error: any) {
     return {
@@ -68,18 +68,63 @@ export async function signInWithCredentails(
   data: Record<string, any>
 ): Promise<ActionResponse> {
   try {
+    console.log("Sending login request with:", {
+      email: data.email,
+      password: data.password,
+    });
+
     const response = await api.auth.login({
       email: data.email,
       password: data.password,
     });
 
-    if (!response.success) {
+    console.log("Response status:", response.status);
+    console.log("Response ok:", response.ok);
+    console.log("Response URL:", response.url);
+
+    // Check if response has content before parsing JSON
+    const contentType = response.headers.get("content-type");
+    const hasJsonContent =
+      contentType && contentType.includes("application/json");
+
+    // If response is not OK (401, 404, etc.) and has no JSON content
+    if (!response.ok) {
+      let errorMessage =
+        "فشل تسجيل الدخول، الرجاء التحقق من البريد الإلكتروني وكلمة المرور.";
+
+      if (response.status === 401) {
+        errorMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+      }
+
+      // Try to parse JSON if content exists
+      if (hasJsonContent) {
+        try {
+          const result = await response.json();
+          errorMessage =
+            result.error?.message || result.message || errorMessage;
+        } catch (e) {
+          // If JSON parsing fails, use default message
+        }
+      }
+
       return {
         success: false,
         status: response.status,
+        error: { message: errorMessage },
+      };
+    }
+
+    // Parse successful response
+    const result = await response.json();
+    console.log("Result:", result);
+
+    if (!result.success) {
+      return {
+        success: false,
+        status: result.status || response.status,
         error: {
           message:
-            response.error?.message ||
+            result.error?.message ||
             "فشل تسجيل الدخول، الرجاء التحقق من البريد الإلكتروني وكلمة المرور.",
         },
       };
@@ -88,9 +133,10 @@ export async function signInWithCredentails(
     return {
       success: true,
       status: 200,
-      data: response.data as any,
+      data: result.data as any,
     };
   } catch (error: any) {
+    console.log(error);
     return {
       success: false,
       status: 500,

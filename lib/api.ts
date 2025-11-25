@@ -3,22 +3,30 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5240/api";
 
+const defaultHeaders = {
+  "Content-Type": "application/json",
+  Accept: "application/json",
+};
+
 export const api = {
   account: {
     me: () =>
       fetch(`${API_BASE_URL}/account/me`, {
+        headers: defaultHeaders,
         credentials: "include",
       }),
   },
   auth: {
     login: (data: { email: string; password: string }) =>
-      fetch(`${API_BASE_URL}/auth/login`, {
+      fetch(`${API_BASE_URL}/Auth/Login`, {
         method: "POST",
+        headers: defaultHeaders,
         credentials: "include",
         body: JSON.stringify(data),
       }),
     logout: () =>
       fetch(`${API_BASE_URL}/auth/logout`, {
+        headers: defaultHeaders,
         credentials: "include",
       }),
     signup: (data: {
@@ -39,35 +47,45 @@ export const api = {
     }) =>
       fetch(`${API_BASE_URL}/auth/addcitizen`, {
         method: "POST",
+        headers: defaultHeaders,
         credentials: "include",
         body: JSON.stringify(data),
       }),
   },
   cities: {
-    getAll: () => fetch(`${API_BASE_URL}/Cities/Get`),
+    getAll: () =>
+      fetch(`${API_BASE_URL}/Cities/Get`, { headers: defaultHeaders }),
     getByCountryId: (id: string) =>
-      fetch(`${API_BASE_URL}/Cities/GetByCountry/${id}`),
+      fetch(`${API_BASE_URL}/Cities/GetByCountry/${id}`, {
+        headers: defaultHeaders,
+      }),
   },
   countries: {
-    getAll: () => fetch(`${API_BASE_URL}/Countries/Get`),
+    getAll: () =>
+      fetch(`${API_BASE_URL}/Countries/Get`, { headers: defaultHeaders }),
   },
   licenseClasses: {
     getAll: () =>
       fetch(`${API_BASE_URL}/LicenceClasses/Get`, {
+        headers: defaultHeaders,
         credentials: "include",
       }),
   },
   applications: {
-    getAll: () => fetch(`${API_BASE_URL}/applications/get`),
+    getAll: () =>
+      fetch(`${API_BASE_URL}/applications/get`, { headers: defaultHeaders }),
     addLocal: (data: { licenseClassId: string; ApplicantPersonId: string }) =>
       fetch(`${API_BASE_URL}/Applications/AddLocal`, {
         method: "POST",
+        headers: defaultHeaders,
         credentials: "include",
         body: JSON.stringify(data),
       }),
   },
   persons: {
-    getAll: () => fetch(`${API_BASE_URL}/persons/get`),
-    getById: (id: string) => fetch(`${API_BASE_URL}/persons/${id}`),
+    getAll: () =>
+      fetch(`${API_BASE_URL}/Persons/Get`, { headers: defaultHeaders }),
+    getById: (id: string) =>
+      fetch(`${API_BASE_URL}/Persons/Get/${id}`, { headers: defaultHeaders }),
   },
 };
