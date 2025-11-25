@@ -32,16 +32,15 @@ export async function signUpWithCredentails(
     const response = await api.auth.signup(requestBody);
     const result = await response.json();
 
-    if (!result.success) {
-      const errorMessage =
-        result.error?.message || "فشل إنشاء الحساب. الرجاء التحقق من البيانات.";
+    console.log(result);
 
+    if (!result.success) {
       return {
         success: false,
         status: result.status || response.status,
         error: {
-          message: errorMessage,
-          details: result.error?.details,
+          message: result.title,
+          details: result.errors,
         },
       };
     }
@@ -49,7 +48,6 @@ export async function signUpWithCredentails(
     return {
       success: true,
       status: 200,
-      data: result.data as any,
     };
   } catch (error: any) {
     return {
@@ -78,54 +76,15 @@ export async function signInWithCredentails(
       password: data.password,
     });
 
-    console.log("Response status:", response.status);
-    console.log("Response ok:", response.ok);
-    console.log("Response URL:", response.url);
+    console.log("Response:", response);
 
-    // Check if response has content before parsing JSON
-    const contentType = response.headers.get("content-type");
-    const hasJsonContent =
-      contentType && contentType.includes("application/json");
-
-    // If response is not OK (401, 404, etc.) and has no JSON content
     if (!response.ok) {
-      let errorMessage =
-        "فشل تسجيل الدخول، الرجاء التحقق من البريد الإلكتروني وكلمة المرور.";
-
-      if (response.status === 401) {
-        errorMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-      }
-
-      // Try to parse JSON if content exists
-      if (hasJsonContent) {
-        try {
-          const result = await response.json();
-          errorMessage =
-            result.error?.message || result.message || errorMessage;
-        } catch (e) {
-          // If JSON parsing fails, use default message
-        }
-      }
-
       return {
         success: false,
         status: response.status,
-        error: { message: errorMessage },
-      };
-    }
-
-    // Parse successful response
-    const result = await response.json();
-    console.log("Result:", result);
-
-    if (!result.success) {
-      return {
-        success: false,
-        status: result.status || response.status,
         error: {
-          message:
-            result.error?.message ||
-            "فشل تسجيل الدخول، الرجاء التحقق من البريد الإلكتروني وكلمة المرور.",
+          message: response?.title,
+          details: response?.errors,
         },
       };
     }
@@ -133,7 +92,6 @@ export async function signInWithCredentails(
     return {
       success: true,
       status: 200,
-      data: result.data as any,
     };
   } catch (error: any) {
     console.log(error);

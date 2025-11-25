@@ -18,11 +18,16 @@ export const api = {
   },
   auth: {
     login: (data: { email: string; password: string }) =>
-      fetch(`${API_BASE_URL}/Auth/Login`, {
+      fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: defaultHeaders,
         credentials: "include",
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          id: "00000000-0000-0000-0000-000000000000",
+          currentState: 0,
+          email: data.email,
+          password: data.password,
+        }),
       }),
     logout: () =>
       fetch(`${API_BASE_URL}/auth/logout`, {
