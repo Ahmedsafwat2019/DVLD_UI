@@ -15,6 +15,8 @@ import UserDropdown from "../UserDropdown";
 const Navbar = () => {
   const { isAuthenticated, logout, user } = useAuth();
 
+  console.log(user);
+
   return (
     <nav className="bg-white xl:px-12">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">

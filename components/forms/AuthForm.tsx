@@ -137,13 +137,12 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    // const formattedData = {
-    //   ...data,
-    //   dateOfBirth: formatToISODate(data.dateOfBirth),
-    // };
+    const formattedData = {
+      ...data,
+      dateOfBirth: formatToISODate(data.dateOfBirth),
+    };
 
-    console.log(data);
-    const result = (await onSubmit(data as T)) as ActionResponse;
+    const result = (await onSubmit(formattedData as T)) as ActionResponse;
     console.log(result);
 
     if (result?.success) {
@@ -154,11 +153,10 @@ const AuthForm = <T extends FieldValues>({
             : "تم إنشاء الحساب بنجاح",
       });
 
-      // Refresh authentication state after successful login
-      if (formType === "SIGN_IN") {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        await refreshAuth();
-      }
+      // Refresh authentication state after successful login or signup
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      await refreshAuth();
+
       router.push(ROUTES.HOME);
     } else {
       toast.error(`حدث خطأ: ${result?.status}`, {

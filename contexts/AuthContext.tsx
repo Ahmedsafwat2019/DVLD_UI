@@ -17,19 +17,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       const response = await api.account.me();
 
-      if (!response.success) {
+      console.log("User is:", response);
+
+      if (!response.ok) {
         setUser(null);
         setIsAuthenticated(false);
         return;
       }
 
-      if (!response.data) {
+      const result = await response.json();
+
+      if (!result.success) {
         setUser(null);
         setIsAuthenticated(false);
         return;
       }
 
-      const userData = response.data as UserResponse;
+      if (!result.data) {
+        setUser(null);
+        setIsAuthenticated(false);
+        return;
+      }
+
+      const userData = result.data as UserResponse;
 
       if (!userData.userName || !userData.role) {
         setUser(null);
@@ -44,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       setIsAuthenticated(true);
     } catch (err) {
+      console.error("Error fetching user:", err);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -60,18 +71,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       const response = await api.auth.logout();
+      const result = await response.json();
 
-      if (!response.success) {
-        logger.error("Logout request failed but clearing local state anyway");
-      } else {
-        logger.info("User logged out successfully");
-      }
+      console.log(response);
+      console.log(result);
+
+      //   if (!result.success) {
+      //     logger.error("Logout request failed but clearing local state anyway");
+      //   } else {
+      //     logger.info("User logged out successfully");
+      //   }
     } catch (err) {
       logger.error({ err }, "Logout failed");
-    } finally {
-      setUser(null);
-      setIsAuthenticated(false);
     }
+    // finally {
+    //   setUser(null);
+    //   setIsAuthenticated(false);
+    // }
   };
 
   const refreshAuth = async () => {

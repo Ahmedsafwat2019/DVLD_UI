@@ -30,7 +30,7 @@ export const api = {
         }),
       }),
     logout: () =>
-      fetch(`${API_BASE_URL}/auth/logout`, {
+      fetch(`${API_BASE_URL}/auth/Logout`, {
         headers: defaultHeaders,
         credentials: "include",
       }),

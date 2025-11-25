@@ -32,15 +32,17 @@ export async function signUpWithCredentails(
     const response = await api.auth.signup(requestBody);
     const result = await response.json();
 
+    console.log(response);
+
     console.log(result);
 
-    if (!result.success) {
+    if (!response.ok) {
       return {
         success: false,
-        status: result.status || response.status,
+        status: response.status || response.status,
         error: {
-          message: result.title,
-          details: result.errors,
+          message: result?.message,
+          details: result?.errors,
         },
       };
     }
@@ -76,6 +78,7 @@ export async function signInWithCredentails(
       password: data.password,
     });
 
+    const result = await response.json();
     console.log("Response:", response);
 
     if (!response.ok) {
@@ -83,8 +86,8 @@ export async function signInWithCredentails(
         success: false,
         status: response.status,
         error: {
-          message: response?.title,
-          details: response?.errors,
+          message: result?.message,
+          details: result?.errors,
         },
       };
     }
