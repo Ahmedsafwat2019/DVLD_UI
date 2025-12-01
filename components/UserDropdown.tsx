@@ -6,11 +6,12 @@ import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import UserAvatar from "./UserAvatar";
 
 export default function UserDropdown() {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  console.log("User is: " + user);
+  // console.log("User is: ", user);
   const isAdmin = user?.userRole.toLowerCase() === "admin";
 
   function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -31,11 +32,7 @@ export default function UserDropdown() {
           className="ml-3 overflow-hidden rounded-full h-11 w-11 bg-gray-100
           flex-center"
         >
-          <Avatar className=" ">
-            <AvatarFallback>
-              {user ? user?.userName.slice(0, 2).toUpperCase() : "CN"}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar name={user ? user?.userName : "CN"} />
         </span>
 
         <span className="block ml-1 font-medium text-theme-sm">مشرف</span>

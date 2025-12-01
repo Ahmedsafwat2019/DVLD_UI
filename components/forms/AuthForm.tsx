@@ -86,7 +86,7 @@ const AuthForm = <T extends FieldValues>({
     try {
       const response = await api.countries.getAll();
       const data = await response.json();
-      if (!data.success) throw new Error("Failed to fetch countries");
+      if (!data.success) return data;
       setSelectOptions((prev) => ({
         ...prev,
         nationality: data.data as Country[],
@@ -101,7 +101,7 @@ const AuthForm = <T extends FieldValues>({
     try {
       const response = await api.cities.getByCountryId(countryId);
       const data = await response.json();
-      if (!data.success) throw new Error("Failed to fetch cities");
+      if (!data.success) return data;
       setSelectOptions((prev) => ({
         ...prev,
         city: data.data || [],

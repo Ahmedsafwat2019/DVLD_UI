@@ -27,3 +27,46 @@ export interface LocalDrivingLicenseApplication {
   createdDate: string;
   updatedDate: string | null;
 }
+
+export interface ApplicationType {
+  id: string;
+  applicationTypeTitle: string;
+  applicationFees: number;
+  currentState: number;
+}
+
+export interface Application {
+  id: string;
+  applicantPersonId: string;
+  applicationDate: string;
+  applicationTypeId: string;
+  applicationStatus: number;
+  lastStatusDate: string;
+  paidFees: number;
+  createdByUserId: string;
+  currentState: number;
+}
+
+export interface PersonDetails {
+  id: string;
+  nationalNo: string;
+  firstName: string;
+  secondName: string;
+  thirdName: string;
+  lastName: string;
+  fullName: string;
+  dateOfBirth: string;
+  gendor: number;
+  address: string;
+  phone: string;
+  nationalityCountryID: string;
+  imagePath: string | null;
+  cityID: string;
+  currentState: number;
+}
+
+export interface ApplicationWithDetails extends Application {
+  person?: PersonDetails;
+  applicationType?: ApplicationType;
+  licenseClass?: string;
+}

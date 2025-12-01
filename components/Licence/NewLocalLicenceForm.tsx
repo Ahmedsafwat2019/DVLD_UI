@@ -57,7 +57,8 @@ const NewLocalLicenceForm = () => {
     const fetchLicenseClasses = async () => {
       try {
         setIsLoadingClasses(true);
-        const response = await api.licenseClasses.getAll();
+        const res = await api.licenseClasses.getAll();
+        const response = await res.json();
 
         if (!response.success) {
           throw new Error(
@@ -125,7 +126,7 @@ const NewLocalLicenceForm = () => {
   const handleSubmitClick = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isAuthenticated || !user?.personID) {
+    if (!isAuthenticated) {
       toast.error("خطأ في المصادقة", {
         description: "الرجاء تسجيل الدخول مرة أخرى",
       });
@@ -144,7 +145,7 @@ const NewLocalLicenceForm = () => {
   };
 
   const handleSubmitForm = async () => {
-    if (!isAuthenticated || !user?.personID) {
+    if (!isAuthenticated) {
       toast.error("خطأ في المصادقة", {
         description: "الرجاء تسجيل الدخول مرة أخرى",
       });
@@ -164,7 +165,8 @@ const NewLocalLicenceForm = () => {
         ApplicantPersonId: user.personID,
       };
 
-      const response = await api.applications.addLocal(payload);
+      const res = await api.applications.addLocal(payload);
+      const response = await res.json();
 
       if (!response.success) {
         throw new Error(response.error?.message || "فشل إرسال الطلب");
@@ -318,7 +320,7 @@ const NewLocalLicenceForm = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting || isLoadingClasses}
-                    className="dark:shadow-gray-900/20 dark:hover:shadow-gray-900/30 flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-brand-600 to-brand-700 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-brand-700 hover:to-brand-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 dark:from-brand-500 dark:to-brand-600 dark:hover:from-brand-600 dark:hover:to-brand-700"
+                    className="dark:shadow-gray-900/20 dark:hover:shadow-gray-900/30 flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-linear-to-r from-brand-600 to-brand-700 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-brand-700 hover:to-brand-800 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 dark:from-brand-500 dark:to-brand-600 dark:hover:from-brand-600 dark:hover:to-brand-700"
                   >
                     {isSubmitting ? (
                       <>

@@ -30,6 +30,10 @@ export type {
 export type {
   LicenseClass,
   LocalDrivingLicenseApplication,
+  Application,
+  ApplicationType,
+  ApplicationWithDetails,
+  PersonDetails,
 } from "./license";
 
 // Test & Appointment Types
