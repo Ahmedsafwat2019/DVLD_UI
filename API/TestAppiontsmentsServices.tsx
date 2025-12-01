@@ -24,7 +24,7 @@ export const getAllTestAppointments = async (): Promise<
     }
   } catch (error) {
     console.error("Error in getAllTestAppointments:", error);
-    throw error;
+    return [];
   }
 };
 
@@ -36,6 +36,10 @@ export const addTestAppointment = async (data: TestAppointment) => {
     return response;
   } catch (error) {
     console.error("Error adding test appointment:", error);
-    throw error;
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to add test appointment",
+      data: null,
+    };
   }
 };

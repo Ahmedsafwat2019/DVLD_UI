@@ -60,10 +60,11 @@ export class ApiClient {
     }
 
     if (!response.ok) {
-      throw {
-        status: response.status,
+      return {
+        success: false,
         message: responseData?.message || response.statusText,
-        errors: responseData.errors,
+        data: null as T,
+        errors: responseData?.errors,
       };
     }
 

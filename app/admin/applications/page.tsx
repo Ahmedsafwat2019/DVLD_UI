@@ -38,9 +38,10 @@ export default function ApplicationsPage() {
       const applicationsResult = await applicationsResponse.json();
 
       if (!applicationsResult.success) {
-        throw new Error(
+        setError(
           applicationsResult.message || "Failed to fetch applications"
         );
+        return;
       }
 
       const applicationsData: Application[] = applicationsResult.data || [];

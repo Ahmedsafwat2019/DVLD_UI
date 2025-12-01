@@ -61,9 +61,11 @@ const NewLocalLicenceForm = () => {
         const response = await res.json();
 
         if (!response.success) {
-          throw new Error(
-            response.error?.message || "Failed to fetch license classes"
-          );
+          console.error("Failed to fetch license classes:", response);
+          toast.error("فشل تحميل أنواع الرخص", {
+            description: response.error?.message || "حدث خطأ أثناء تحميل البيانات",
+          });
+          return;
         }
 
         if (response.data && Array.isArray(response.data)) {
@@ -77,7 +79,7 @@ const NewLocalLicenceForm = () => {
       } catch (error: any) {
         console.error("Error fetching license classes:", error);
         toast.error("فشل تحميل أنواع الرخص", {
-          description: error.message || "حدث خطأ أثناء تحميل البيانات",
+          description: "حدث خطأ أثناء تحميل البيانات",
         });
       } finally {
         setIsLoadingClasses(false);
@@ -169,7 +171,11 @@ const NewLocalLicenceForm = () => {
       const response = await res.json();
 
       if (!response.success) {
-        throw new Error(response.error?.message || "فشل إرسال الطلب");
+        console.error("Failed to submit application:", response);
+        toast.error("فشل إرسال الطلب", {
+          description: response.error?.message || "حدث خطأ أثناء إرسال الطلب",
+        });
+        return;
       }
 
       toast.success("تم بنجاح", {
