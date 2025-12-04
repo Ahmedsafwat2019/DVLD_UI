@@ -23,3 +23,8 @@ export const EMPTY_USERS = {
   title: "No Users Found",
   message: "you're ALONE. The only one here. More users are coming soon!",
 };
+
+export const EMPTY_APPLICATIONS = {
+  title: "لا توجد طلبات",
+  message: "لا توجد طلبات بهذه الحالة",
+};

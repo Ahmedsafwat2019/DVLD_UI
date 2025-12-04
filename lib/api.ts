@@ -67,6 +67,20 @@ export const api = {
     getAll: () =>
       fetch(`${API_BASE_URL}/Countries/Get`, { headers: defaultHeaders }),
   },
+  localDrivingLicencesApps: {
+    getAppViews: () =>
+      fetch(`${API_BASE_URL}/LocalDrivingLicencesApps/GetAppViews`, {
+        headers: defaultHeaders,
+        credentials: "include",
+      }),
+    changeStatus: ({ id, status }: { id: string; status: number }) =>
+      fetch(`${API_BASE_URL}/LocalDrivingLicencesApps/ChangeStatus/${id}`, {
+        method: "POST",
+        headers: defaultHeaders,
+        credentials: "include",
+        body: JSON.stringify({ status }),
+      }),
+  },
   licenseClasses: {
     getAll: () =>
       fetch(`${API_BASE_URL}/LicenceClasses/Get`, {

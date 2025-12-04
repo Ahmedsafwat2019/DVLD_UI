@@ -1,109 +1,68 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
-  Clock,
-  CheckCircle,
-  XCircle,
-  Eye,
+  FileText,
   Calendar,
   User,
   CreditCard,
-  FileText,
-  Trash2,
-  Pencil,
+  Check,
+  X,
+  Loader2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { ApplicationWithDetails } from "@/types";
-
-type ApplicationStatus = 1 | 2 | 3 | 4;
-
-interface StatusConfig {
-  label: string;
-  icon: typeof FileText;
-  bgColor: string;
-  textColor: string;
-  iconColor: string;
-  borderColor: string;
-}
-
-const getStatusConfig = (status: number): StatusConfig => {
-  const configs: Record<number, StatusConfig> = {
-    1: {
-      label: "مقدم",
-      icon: FileText,
-      bgColor: "bg-blue-light-50",
-      textColor: "text-blue-light-700",
-      iconColor: "text-blue-light-600",
-      borderColor: "border-blue-light-200",
-    },
-    2: {
-      label: "قيد المراجعة",
-      icon: Clock,
-      bgColor: "bg-warning-50",
-      textColor: "text-warning-700",
-      iconColor: "text-warning-600",
-      borderColor: "border-warning-200",
-    },
-    3: {
-      label: "مقبول",
-      icon: CheckCircle,
-      bgColor: "bg-success-50",
-      textColor: "text-success-700",
-      iconColor: "text-success-600",
-      borderColor: "border-success-200",
-    },
-    4: {
-      label: "مرفوض",
-      icon: XCircle,
-      bgColor: "bg-error-50",
-      textColor: "text-error-700",
-      iconColor: "text-error-600",
-      borderColor: "border-error-200",
-    },
-  };
-
-  // Return default config if status is not recognized
-  return (
-    configs[status] || {
-      label: "غير معروف",
-      icon: FileText,
-      bgColor: "bg-gray-50",
-      textColor: "text-gray-700",
-      iconColor: "text-gray-600",
-      borderColor: "border-gray-200",
-    }
-  );
-};
-
-const StatusBadge = ({ status }: { status: number }) => {
-  const config = getStatusConfig(status);
-  const Icon = config.icon;
-
-  return (
-    <div
-      className={cn(
-        "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border",
-        config.bgColor,
-        config.textColor,
-        config.borderColor
-      )}
-    >
-      <Icon className={cn("w-4 h-4", config.iconColor)} />
-      {config.label}
-    </div>
-  );
-};
+import type { LocalDrivingLicenseApplication } from "@/types";
+import { ApplicationStatus } from "@/types";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
+import StatusBadge from "./Badges/StatusBadge";
+import { formatDate } from "@/lib/utils";
 
 interface ApplicationsTableProps {
-  applications: ApplicationWithDetails[];
-  onViewDetails?: (applicationId: string) => void;
+  applications: LocalDrivingLicenseApplication[];
+  onStatusChange?: () => void;
 }
 
 export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({
   applications,
-  onViewDetails,
+  onStatusChange,
 }) => {
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const handleChangeStatus = async (
+    applicationId: string,
+    newStatus: ApplicationStatus
+  ) => {
+    setLoadingStates((prev) => ({ ...prev, [applicationId]: true }));
+
+    try {
+      const response = await api.localDrivingLicencesApps.changeStatus({
+        id: applicationId,
+        status: newStatus,
+      });
+
+      const { message, success } = await response.json();
+
+      if (success) {
+        toast.success(message || "تم تحديث حالة الطلب بنجاح");
+        onStatusChange?.();
+      } else {
+        toast.error(message || "فشل تحديث حالة الطلب");
+      }
+    } catch (error) {
+      console.error("Error changing status:", error);
+      toast.error("حدث خطأ أثناء تحديث حالة الطلب");
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [applicationId]: false }));
+    }
+  };
+
+  const canApprove = (status: ApplicationStatus) =>
+    status === ApplicationStatus.New;
+  const canReject = (status: ApplicationStatus) =>
+    status === ApplicationStatus.New || status === ApplicationStatus.Approved;
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
       {/* Table Header */}
@@ -118,10 +77,13 @@ export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({
                 المتقدم
               </th>
               <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                نوع الطلب
+                نوع الرخصة
               </th>
               <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                تاريخ التقديم
+                المدينة / البلد
+              </th>
+              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                تاريخ الإنشاء
               </th>
               <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 الحالة
@@ -135,90 +97,123 @@ export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {applications.map((app, index) => (
-              <tr
-                key={app.id || `app-${index}`}
-                className="hover:bg-gray-50 transition-colors"
-              >
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-900">
-                      {app.id?.slice(0, 8).toUpperCase() || "N/A"}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {app.person?.fullName || "غير متوفر"}
-                      </div>
-                      {app.person?.nationalNo && (
-                        <div className="text-xs text-gray-500">
-                          {app.person.nationalNo}
+            {applications.map((app, index) => {
+              const isLoading =
+                loadingStates[app.localDrivingLicenseApplicationId];
+              console.log(app);
+
+              return (
+                <tr
+                  key={app.localDrivingLicenseApplicationId || `app-${index}`}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm font-medium text-gray-900">
+                        {app.localDrivingLicenseApplicationId
+                          ?.slice(0, 8)
+                          .toUpperCase() || "N/A"}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-gray-400" />
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {app.fullName || "غير متوفر"}
                         </div>
+                        {app.nationalNum && (
+                          <div className="text-xs text-gray-500">
+                            {app.nationalNum}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {app.className || "غير متوفر"}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      العمر: {app.age} سنة
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {app.city || "غير متوفر"}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {app.country || "غير متوفر"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-900">
+                        {app.createdDate
+                          ? formatDate(new Date(app.createdDate))
+                          : "غير متوفر"}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <StatusBadge status={app.currentState} />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm font-medium text-gray-900">
+                        {app.paidFees ?? 0} ج.م
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      {isLoading ? (
+                        <Loader2 className="w-5 h-5 text-brand-500 animate-spin" />
+                      ) : (
+                        <>
+                          {canApprove(app.currentState) && (
+                            <button
+                              onClick={() =>
+                                handleChangeStatus(
+                                  app.localDrivingLicenseApplicationId,
+                                  ApplicationStatus.Approved
+                                )
+                              }
+                              disabled={isLoading}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-success-600 hover:text-success-700 hover:bg-success-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              title="قبول"
+                            >
+                              <Check className="w-4 h-4" />
+                              قبول
+                            </button>
+                          )}
+                          {canReject(app.currentState) && (
+                            <button
+                              onClick={() =>
+                                handleChangeStatus(
+                                  app.localDrivingLicenseApplicationId,
+                                  ApplicationStatus.Rejected
+                                )
+                              }
+                              disabled={isLoading}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-error-600 hover:text-error-700 hover:bg-error-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              title="رفض"
+                            >
+                              <X className="w-4 h-4" />
+                              رفض
+                            </button>
+                          )}
+                        </>
                       )}
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900">
-                    {app.applicationType?.applicationTypeTitle || "غير متوفر"}
-                  </div>
-                  {app.applicationType?.applicationFees !== undefined && (
-                    <div className="text-xs text-gray-500">
-                      رسوم: {app.applicationType.applicationFees} ج.م
-                    </div>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-900">
-                      {app.applicationDate
-                        ? new Date(app.applicationDate).toLocaleDateString(
-                            "ar-EG",
-                            {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            }
-                          )
-                        : "غير متوفر"}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <StatusBadge status={app.applicationStatus} />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-900">
-                      {app.paidFees ?? 0} ج.م
-                    </span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    onClick={() => onViewDetails?.(app.id)}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors"
-                  >
-                    <Pencil className="w-4 h-4" />
-                    تعديل
-                  </button>
-                  <button
-                    onClick={() => onViewDetails?.(app.id)}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    حذف
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
