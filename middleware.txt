@@ -1,0 +1,52 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5240/api";
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Check if the request is for admin routes
+  if (pathname.startsWith("/admin")) {
+    try {
+      // Get cookies from the request
+      const cookieHeader = request.headers.get("cookie") || "";
+
+      // Call the API to verify user authentication and role
+      const response = await fetch(`${API_BASE_URL}/account/me`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Cookie: cookieHeader,
+        },
+        credentials: "include",
+      });
+
+      const result = await response.json();
+
+      // Check if user is authenticated and has admin role
+      if (
+        !result.success ||
+        !result.data ||
+        result.data.role?.toLowerCase() !== "admin"
+      ) {
+        // Redirect non-admin users to home page
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+
+      // User is admin, allow access
+      return NextResponse.next();
+    } catch (error) {
+      console.error("Middleware auth check failed:", error);
+      // On error, redirect to home for safety
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/admin/:path*"],
+};

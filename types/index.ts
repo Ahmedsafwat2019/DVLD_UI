@@ -36,6 +36,10 @@ export type {
   PersonDetails,
 } from "./license";
 
+export {
+  ApplicationStatus,
+} from "./license";
+
 // Test & Appointment Types
 export type {
   TestAppointment,

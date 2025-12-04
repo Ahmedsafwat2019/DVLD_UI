@@ -46,7 +46,7 @@
   --secondary-hover: #cbd5e1;
   --secondary-foreground: #1e293b;
   --accent: #fdfdfd;
-  --accent-foreground: #ffffff;
+  --accent-foreground: #000000;
   --destructive: #dc2626;
   --destructive-dark: #b91c1c;
   --border: #e2e8f0;
@@ -323,6 +323,36 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+
+  /* Modern Button Hover Effects */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  button:not(:disabled):hover,
+  [role="button"]:not(:disabled):hover {
+    @apply transform;
+  }
+
+  button:not(:disabled):active,
+  [role="button"]:not(:disabled):active {
+    @apply scale-[0.98];
+  }
+
+  /* Card Hover Effects */
+  .hover-lift {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .hover-lift:hover {
+    @apply transform -translate-y-1 shadow-lg;
+  }
+
+  /* Link Hover Effects */
+  a:not(:disabled) {
+    @apply transition-colors duration-200;
+  }
 }
 
 @layer components {
@@ -452,6 +482,30 @@
   }
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+@utility hover-scale {
+  @apply transition-transform duration-200 ease-in-out;
+  &:hover {
+    @apply scale-105;
+  }
+  &:active {
+    @apply scale-95;
+  }
+}
+
+@utility hover-glow {
+  @apply transition-all duration-300 ease-in-out;
+  &:hover {
+    @apply shadow-xl;
+  }
+}
+
+@utility smooth-hover {
+  @apply transition-all duration-200 ease-in-out;
+  &:hover {
+    @apply brightness-110;
+  }
 }
 
 @utility custom-scrollbar {

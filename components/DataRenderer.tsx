@@ -28,7 +28,6 @@ interface Props<T> {
 interface StateSkeletonProps {
   image: {
     light: string;
-    dark: string;
     alt: string;
   };
   title: string;
@@ -48,18 +47,12 @@ const StateSkeleton = ({
   <div className="mt-16 flex w-full flex-col items-center justify-center sm:mt-36">
     <>
       <Image
-        src={image.dark}
-        alt={image.alt}
-        width={270}
-        height={200}
-        className="hidden object-contain dark:block"
-      />
-      <Image
         src={image.light}
         alt={image.alt}
-        width={270}
-        height={200}
-        className="block object-contain dark:hidden"
+        width={400}
+        height={400}
+        quality={100}
+        className="block object-contain "
       />
       <h2 className="h2-bold text-dark200_light900 mt-8">{title}</h2>
       <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
@@ -88,7 +81,6 @@ const DataRenderer = <T,>({
       <StateSkeleton
         image={{
           light: "/images/light-error.png",
-          dark: "/images/dark-error.png",
           alt: "Error state Illustration",
         }}
         title={error?.message || DEFAULT_ERROR.title}
@@ -104,8 +96,7 @@ const DataRenderer = <T,>({
     return (
       <StateSkeleton
         image={{
-          light: "/images/light-illustration.png",
-          dark: "/images/dark-illustration.png",
+          light: "/images/light-error.png",
           alt: "Empty state Illustration",
         }}
         title={empty.title}

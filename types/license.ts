@@ -2,12 +2,36 @@
  * License & Application Types
  */
 
+import { FileText } from "lucide-react";
+
 export interface LicenseClass {
   id: string;
   className: string;
   classDescription: string;
   classFees: number;
   minimumAllowedAge: number;
+}
+
+/**
+ * Application Status Enum
+ */
+export enum ApplicationStatus {
+  New = 1,
+  Approved = 2,
+  Rejected = 3,
+  Paid = 4,
+  WaitingTest = 5,
+  FailTest = 6,
+  PassTest = 7,
+  Completed = 8,
+}
+export interface StatusConfig {
+  label: string;
+  icon: typeof FileText;
+  bgColor: string;
+  textColor: string;
+  iconColor: string;
+  borderColor: string;
 }
 
 export interface LocalDrivingLicenseApplication {
@@ -22,7 +46,7 @@ export interface LocalDrivingLicenseApplication {
   city: string;
   paidFees: number;
   className: string;
-  currentState: number;
+  currentState: ApplicationStatus;
   createdBy: string | null;
   createdDate: string;
   updatedDate: string | null;

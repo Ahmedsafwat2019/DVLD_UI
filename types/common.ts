@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
+  errors?: [];
   message?: string;
 }
 
