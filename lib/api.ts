@@ -23,8 +23,6 @@ export const api = {
         headers: defaultHeaders,
         credentials: "include",
         body: JSON.stringify({
-          id: "00000000-0000-0000-0000-000000000000",
-          currentState: 0,
           email: data.email,
           password: data.password,
         }),
@@ -85,6 +83,12 @@ export const api = {
         headers: defaultHeaders,
         credentials: "include",
         body: JSON.stringify(data),
+      }),
+  },
+  ApplicationTypes: {
+    getById: (id: string) =>
+      fetch(`${API_BASE_URL}/ApplicationTypes/Get/${id}`, {
+        headers: defaultHeaders,
       }),
   },
   persons: {

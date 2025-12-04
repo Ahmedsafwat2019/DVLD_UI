@@ -2,6 +2,8 @@
 
 import { api } from "@/lib/api";
 import { ActionResponse } from "@/types";
+import handleError from "../handlers/error";
+import { parseJSON } from "../utils";
 
 /**
  * SIGN UP ACTION
@@ -30,19 +32,19 @@ export async function signUpWithCredentails(
     console.log(requestBody);
 
     const response = await api.auth.signup(requestBody);
+
     const result = await response.json();
 
     console.log(response);
 
-    console.log(result);
+    console.log("sign up result: ", result);
 
     if (!response.ok) {
       return {
-        success: false,
-        status: response.status || response.status,
+        success: result.success,
+        status: response.status,
         error: {
-          message: result?.message,
-          details: result?.errors,
+          message: response.statusText,
         },
       };
     }
@@ -52,13 +54,8 @@ export async function signUpWithCredentails(
       status: 200,
     };
   } catch (error: any) {
-    return {
-      success: false,
-      status: 500,
-      error: {
-        message: `خطأ في الاتصال بالخادم: ${error.message}`,
-      },
-    };
+    console.log(error);
+    return error;
   }
 }
 /**
@@ -78,30 +75,26 @@ export async function signInWithCredentails(
       password: data.password,
     });
 
-    const result = await response.json();
-    console.log("Response:", response);
+    const result = await parseJSON(response);
+
+    console.log("sign in response: ", result);
 
     if (!response.ok) {
       return {
-        success: false,
+        success: response.ok,
         status: response.status,
         error: {
-          message: result?.message,
-          details: result?.errors,
+          message: result,
         },
       };
     }
 
     return {
-      success: true,
-      status: 200,
+      success: response.ok,
+      status: response.status,
     };
   } catch (error: any) {
     console.log(error);
-    return {
-      success: false,
-      status: 500,
-      error: { message: `خطأ في الاتصال بالخادم: ${error.message}` },
-    };
+    return error;
   }
 }

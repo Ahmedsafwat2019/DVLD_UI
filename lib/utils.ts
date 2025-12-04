@@ -28,3 +28,8 @@ export function isValidDate(date: Date | undefined) {
   }
   return !isNaN(date.getTime());
 }
+
+export async function parseJSON(response: Response) {
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
+}

@@ -11,6 +11,10 @@ export const AddNewResult = async (data: TestResult) => {
     return response;
   } catch (error) {
     console.error("Error adding test appointment:", error);
-    throw error;
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to add test result",
+      data: null,
+    };
   }
 };

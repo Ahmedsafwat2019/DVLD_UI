@@ -1,13 +1,17 @@
 "use client";
 
+import ROUTES from "@/constants/routes";
 import { api } from "@/lib/api";
 import logger from "@/lib/logger";
+import { parseJSON } from "@/lib/utils";
 import { AuthContextType, User, UserResponse } from "@/types";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,23 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       const response = await api.account.me();
 
-      console.log("User is:", response);
-
-      if (!response.ok) {
-        setUser(null);
-        setIsAuthenticated(false);
-        return;
-      }
-
       const result = await response.json();
-
-      if (!result.success) {
-        setUser(null);
-        setIsAuthenticated(false);
-        return;
-      }
-
-      if (!result.data) {
+      // console.log("user result: ", result);
+      if (!result.success || !result.data) {
         setUser(null);
         setIsAuthenticated(false);
         return;
@@ -71,23 +61,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       const response = await api.auth.logout();
-      const result = await response.json();
 
-      console.log(response);
-      console.log(result);
+      const result = await parseJSON(response);
+      // console.log("logout response: ", result);
 
-      //   if (!result.success) {
-      //     logger.error("Logout request failed but clearing local state anyway");
-      //   } else {
-      //     logger.info("User logged out successfully");
-      //   }
+      if (!response.ok) {
+        logger.error("Logout request failed but clearing local state anyway");
+        return;
+      }
+
+      logger.info("User logged out successfully");
+      router.push(ROUTES.SIGN_IN);
     } catch (err) {
       logger.error({ err }, "Logout failed");
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
     }
-    // finally {
-    //   setUser(null);
-    //   setIsAuthenticated(false);
-    // }
   };
 
   const refreshAuth = async () => {
