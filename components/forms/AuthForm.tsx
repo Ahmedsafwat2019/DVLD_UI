@@ -75,8 +75,8 @@ const AuthForm = <T extends FieldValues>({
 
   const [selectOptions, setSelectOptions] = useState<SelectOptions>({
     gendor: [
-      { id: "male", name: "ذكر" },
-      { id: "female", name: "أنثى" },
+      { id: "male", name: "male" },
+      { id: "female", name: "female" },
     ],
     nationality: [],
     city: [],
