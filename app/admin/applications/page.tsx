@@ -1,8 +1,9 @@
-import type { LocalDrivingLicenseApplication } from "@/types";
+import type { ActionResponse, LocalDrivingLicenseApplication } from "@/types";
 import { api } from "@/lib/api";
 import { ApplicationsStats } from "@/components/admin/Applications/ApplicationsStats";
-import { ApplicationsContent } from "@/components/admin/Applications/ApplicationsContent";
-import { redirect } from "next/navigation";
+import { ApplicationsTable } from "@/components/admin/Applications/ApplicationsTable";
+import DataRenderer from "@/components/DataRenderer";
+import { EMPTY_APPLICATIONS } from "@/constants/states";
 
 // async function checkAdminAccess(): Promise<boolean> {
 //   try {
@@ -20,19 +21,27 @@ import { redirect } from "next/navigation";
 //   }
 // }
 
-async function getApplications(): Promise<LocalDrivingLicenseApplication[]> {
+async function getApplications(): Promise<
+  ActionResponse<LocalDrivingLicenseApplication[]>
+> {
   try {
     const response = await api.localDrivingLicencesApps.getAppViews();
     const result = await response.json();
 
     if (result.success) {
-      return result.data || [];
+      return result;
     }
 
-    return [];
+    return {
+      success: false,
+      data: [],
+    };
   } catch (error) {
     console.error("Error fetching applications:", error);
-    return [];
+    return {
+      success: false,
+      data: [],
+    };
   }
 }
 
@@ -58,13 +67,13 @@ export default async function ApplicationsPage() {
         </div>
 
         {/* Stats Cards */}
-        <ApplicationsStats applications={applications} />
+        <ApplicationsStats applications={applications.data || []} />
 
         {/* Applications Count */}
-        {applications.length > 0 && (
+        {applications.data && applications.data.length > 0 && (
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-900 flex gap-3 items-center">
-              الطلبات ({applications.length}){" "}
+              الطلبات ({applications.data.length}){" "}
             </h2>
             <p className="text-sm text-gray-600 mt-1">
               استخدم أيقونة التصفية في عمود الحالة لتصفية الطلبات
@@ -72,8 +81,13 @@ export default async function ApplicationsPage() {
           </div>
         )}
 
-        {/* Applications Table */}
-        <ApplicationsContent initialApplications={applications} />
+        <DataRenderer
+          success={applications.success}
+          data={applications.data}
+          empty={EMPTY_APPLICATIONS}
+          error={applications.error}
+          render={(data) => <ApplicationsTable applications={data} />}
+        />
       </div>
     </div>
   );

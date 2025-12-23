@@ -10,6 +10,7 @@ import {
   Check,
   X,
   Loader2,
+  Trash,
 } from "lucide-react";
 import StatusBadge from "@/components/Badges/StatusBadge";
 import { formatDate } from "@/lib/utils";
@@ -282,6 +283,27 @@ export const createColumns = (
         }
       };
 
+      const handleApplicationDelete = async (applicationId: string) => {
+        setIsLoading(true);
+        try {
+          const response = await (
+            await api.localDrivingLicencesApps.deleteById(applicationId)
+          ).json();
+
+          if (response.success) {
+            toast.success(response.data || "تم حذف الطلب بنجاح");
+            onStatusChange?.();
+          } else {
+            toast.error(response.error || "فشل حذف الطلب");
+          }
+        } catch (error) {
+          console.error("Error deleting application:", error);
+          toast.error("حدث خطأ أثناء حذف الطلب");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
       const canApprove = application.currentState === ApplicationStatus.New;
       const canReject =
         application.currentState === ApplicationStatus.New ||
@@ -343,13 +365,17 @@ export const createColumns = (
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-gray-700 hover:bg-blue-50 hover:text-blue-700">
-              <User className="ml-2 h-4 w-4 text-blue-500" />
-              <span>عرض بيانات المتقدم</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-gray-700 hover:bg-purple-50 hover:text-purple-700">
-              <FileText className="ml-2 h-4 w-4 text-purple-500" />
-              <span>عرض تفاصيل الطلب</span>
+            <DropdownMenuItem
+              onClick={() =>
+                handleApplicationDelete(
+                  application.localDrivingLicenseApplicationId
+                )
+              }
+              disabled={isLoading}
+              className="text-red-700 bg-red-50 hover:bg-red-100! hover:text-red-700!"
+            >
+              <Trash className="ml-2 h-4 w-4 text-red-500" />
+              <span>حذف الطلب</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

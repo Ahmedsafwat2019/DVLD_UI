@@ -73,6 +73,12 @@ export const api = {
         headers: defaultHeaders,
         credentials: "include",
       }),
+    deleteById: (id: string) =>
+      fetch(`${API_BASE_URL}/LocalDrivingLicencesApps/Delete/${id}`, {
+        method: "DELETE",
+        headers: defaultHeaders,
+        credentials: "include",
+      }),
     changeStatus: ({ id, status }: { id: string; status: number }) =>
       fetch(`${API_BASE_URL}/LocalDrivingLicencesApps/ChangeStatus/${id}`, {
         method: "POST",
