@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useEffect } from "react";
 import {
   FileText,
   Clock,
@@ -12,48 +13,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
 import Link from "next/link";
 import ROUTES from "@/constants/routes";
+import { LocalDrivingLicenseApplication } from "@/types";
 
-// Static data for demo - this represents the logged-in user's applications
-const mockApplications = [
-  {
-    id: "APP-001",
-    licenseClass: "رخصة قيادة خاصة - الفئة الأولى",
-    applicationDate: "2024-01-15",
-    status: "submitted",
-    paidFees: 500,
-    lastUpdated: "2024-01-16",
-    notes: "تم استلام الطلب وجاري المراجعة",
-  },
-  {
-    id: "APP-002",
-    licenseClass: "رخصة قيادة عامة - الفئة الثانية",
-    applicationDate: "2024-01-10",
-    status: "under_review",
-    paidFees: 750,
-    lastUpdated: "2024-01-18",
-    notes: "تحت المراجعة من قبل الموظف المختص",
-  },
-  {
-    id: "APP-003",
-    licenseClass: "رخصة قيادة دراجة نارية",
-    applicationDate: "2024-01-05",
-    status: "accepted",
-    paidFees: 400,
-    lastUpdated: "2024-01-20",
-    notes: "تم قبول الطلب - يرجى الحضور لإتمام الإجراءات",
-  },
-  {
-    id: "APP-004",
-    licenseClass: "رخصة قيادة خاصة - الفئة الأولى",
-    applicationDate: "2023-12-28",
-    status: "rejected",
-    paidFees: 500,
-    lastUpdated: "2024-01-12",
-    notes: "تم رفض الطلب - يرجى تحديث المستندات المطلوبة",
-  },
-];
 
 type ApplicationStatus =
   | "submitted"
@@ -160,21 +124,51 @@ const ApplicationRow = ({ application }: { application: any }) => {
 };
 
 export default function MyApplicationsPage() {
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+
+  
+const [applications, setApplications] = useState<LocalDrivingLicenseApplication []>([]);
+const [loading, setLoading] = useState(true);
+useEffect(() => {
+  const fetchApplications = async () => {
+    try {
+      // استدعاء الدالة (مهم)
+      const response = await api.localDrivingLicencesApps.getAppViewByPersonID(); // الدالة مش محتاجة parameter، بس TypeScript شايف id: any
+      // response هو ApiResponse<LocalDrivingLicenseApplication[]>
+     const result = await response.json();
+     console.log("Fetched applications:", result); // تحقق من البيانات في الكونسول
+
+      if (result.success) {
+        setApplications(result.data); // نحط البيانات في الـ state
+      } else {
+        console.error("API returned an error:", result.error);
+      }
+    } catch (error) {
+      console.error("Failed to load applications", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplications();
+}, []);
+  /*
+  
+  const [filterStatus, setFilterStatus] = useState<any>("all");
 
   const filteredApplications =
     filterStatus === "all"
-      ? mockApplications
-      : mockApplications.filter((app) => app.status === filterStatus);
+      ? applications
+      : applications.filter((app) => app.currentState === filterStatus);
 
   const stats = {
-    total: mockApplications.length,
-    submitted: mockApplications.filter((a) => a.status === "submitted").length,
-    under_review: mockApplications.filter((a) => a.status === "under_review")
+    total: applications.length,
+    submitted: applications.filter((a) => a.currentState === "submitted").length,
+    under_review: applications.filter((a) => a.status === "under_review")
       .length,
-    accepted: mockApplications.filter((a) => a.status === "accepted").length,
+    accepted: mpplications.filter((a) => a.status === "accepted").length,
     rejected: mockApplications.filter((a) => a.status === "rejected").length,
   };
+  */
 
   return (
     <section className="pb-12  md:pb-16 lg:pb-24 ">
@@ -270,6 +264,7 @@ export default function MyApplicationsPage() {
         </div> */}
 
         {/* Filter */}
+       { /*
         <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 mb-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex items-center gap-2 shrink-0">
@@ -302,9 +297,11 @@ export default function MyApplicationsPage() {
             </div>
           </div>
         </div>
+        */
+}
 
         {/* Applications Table */}
-        {filteredApplications.length > 0 ? (
+        {applications.length > 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -334,9 +331,9 @@ export default function MyApplicationsPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredApplications.map((application) => (
+                  {applications.map((application) => (
                     <ApplicationRow
-                      key={application.id}
+                      key={application.localDrivingLicenseApplicationId}
                       application={application}
                     />
                   ))}
@@ -364,7 +361,7 @@ export default function MyApplicationsPage() {
         )}
 
         {/* Call to Action */}
-        {mockApplications.length > 0 && (
+        {applications.length > 0 && (
           <div className="mt-8 bg-linear-to-r from-brand-50 to-blue-light-50 rounded-xl p-6 sm:p-8 border border-brand-100">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
