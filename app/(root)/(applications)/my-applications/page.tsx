@@ -13,7 +13,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { api } from "@/lib/api";
+import {api} from "@/lib/api"; 
 import Link from "next/link";
 import ROUTES from "@/constants/routes";
 import { LocalDrivingLicenseApplication } from "@/types";
@@ -26,7 +26,7 @@ type ApplicationStatus =
   | "rejected"
   | "pending_payment";
 
-const getStatusConfig = (status: ApplicationStatus) => {
+const getStatusConfig = (status: ApplicationStatus | string) => {
   const configs = {
     submitted: {
       label: "مقدم",
@@ -70,10 +70,18 @@ const getStatusConfig = (status: ApplicationStatus) => {
     },
   };
 
-  return configs[status];
+  // لو الـ status غير معروف، نرجع default config
+  return configs[status] ?? {
+    label: "غير معروف",
+    icon: FileText,
+    bgColor: "bg-gray-50",
+    textColor: "text-gray-400",
+    iconColor: "text-gray-400",
+    borderColor: "border-gray-200",
+  };
 };
 
-const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
+const StatusBadge = ({ status }: { status: ApplicationStatus | string }) => {
   const config = getStatusConfig(status);
   const Icon = config.icon;
 
@@ -123,11 +131,15 @@ const ApplicationRow = ({ application }: { application: any }) => {
   );
 };
 
+
 export default function MyApplicationsPage() {
 
   
 const [applications, setApplications] = useState<LocalDrivingLicenseApplication []>([]);
 const [loading, setLoading] = useState(true);
+console.log("FULL API OBJECT 👉", api);
+console.log("ALL FUNCTIONS:", Object.keys(api.localDrivingLicencesApps));
+
 useEffect(() => {
   const fetchApplications = async () => {
     try {
@@ -136,7 +148,8 @@ useEffect(() => {
       // response هو ApiResponse<LocalDrivingLicenseApplication[]>
      const result = await response.json();
      console.log("Fetched applications:", result); // تحقق من البيانات في الكونسول
-
+     
+     
       if (result.success) {
         setApplications(result.data); // نحط البيانات في الـ state
       } else {

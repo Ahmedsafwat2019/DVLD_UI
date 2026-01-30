@@ -73,6 +73,11 @@ export const api = {
         headers: defaultHeaders,
         credentials: "include",
       }),
+    getAppViewByPersonID: () =>
+      fetch(`${API_BASE_URL}/LocalDrivingLicencesApps/GetAppViewsByPersonID`, {
+        headers: defaultHeaders,
+        credentials: "include",
+      }),
     deleteById: (id: string) =>
       fetch(`${API_BASE_URL}/LocalDrivingLicencesApps/Delete/${id}`, {
         method: "DELETE",
