@@ -17,6 +17,7 @@ import {api} from "@/lib/api";
 import Link from "next/link";
 import ROUTES from "@/constants/routes";
 import { LocalDrivingLicenseApplication } from "@/types";
+import ApplicationRow from "@/components/ApplicationRow";
 
 
 type ApplicationStatus =
@@ -100,36 +101,8 @@ const StatusBadge = ({ status }: { status: ApplicationStatus | string }) => {
   );
 };
 
-const ApplicationRow = ({ application }: { application: any }) => {
-  return (
-    <tr className="border-b border-gray-200 hover:odd:bg-gray-50 hover:even:bg-white transition-colors even:bg-gray-50">
-      <td className="px-4 py-4 text-sm text-gray-900 font-medium">
-        {application.id}
-      </td>
-      <td className="px-4 py-4 text-sm text-gray-900">
-        {application.licenseClass}
-      </td>
-      <td className="px-4 py-4 text-sm text-gray-600">
-        {new Date(application.applicationDate).toLocaleDateString("ar-EG")}
-      </td>
-      <td className="px-4 py-4 text-sm text-gray-900 font-medium">
-        {application.paidFees} ج.م
-      </td>
-      <td className="px-4 py-4">
-        <StatusBadge status={application.status} />
-      </td>
-      <td className="px-4 py-4 text-sm text-gray-600">
-        {new Date(application.lastUpdated).toLocaleDateString("ar-EG")}
-      </td>
-      <td className="px-4 py-4">
-        <button className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors">
-          <Eye className="w-4 h-4" />
-          عرض
-        </button>
-      </td>
-    </tr>
-  );
-};
+
+
 
 
 export default function MyApplicationsPage() {
@@ -137,6 +110,14 @@ export default function MyApplicationsPage() {
   
 const [applications, setApplications] = useState<LocalDrivingLicenseApplication []>([]);
 const [loading, setLoading] = useState(true);
+
+
+const [contextMenu, setContextMenu] = useState<{
+  visible: boolean;
+  x: number;
+  y: number;
+  application?: LocalDrivingLicenseApplication;
+}>({ visible: false, x: 0, y: 0 });
 console.log("FULL API OBJECT 👉", api);
 console.log("ALL FUNCTIONS:", Object.keys(api.localDrivingLicencesApps));
 

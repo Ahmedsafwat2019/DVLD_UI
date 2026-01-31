@@ -1,4 +1,5 @@
 // import { fetch } from "./handlers/fetch";
+"use client";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5240/api";
@@ -122,4 +123,23 @@ export const api = {
     getById: (id: string) =>
       fetch(`${API_BASE_URL}/Persons/Get/${id}`, { headers: defaultHeaders }),
   },
-};
+   paypal: {
+    // إنشاء Order
+    createOrder: (items: { applicationID: string; Name: string; Description: string; Price: number; Quantity: number }[]) =>
+      fetch(`${API_BASE_URL}/PayPalPayment/CreateOrder`, {
+        method: "POST",
+        headers: defaultHeaders,
+        credentials: "include",
+        body: JSON.stringify({ items }),
+      }),
+
+    // Capture Order بعد ما العميل يوافق على الدفع
+    captureOrder: (orderId: string) =>
+      fetch(`${API_BASE_URL}/PayPalPayment/CaptureOrder/${orderId}`, {
+        method: "POST",
+        headers: defaultHeaders,
+        credentials: "include",
+        body: JSON.stringify({ orderId }),
+      }),
+  }
+ };
